@@ -3,8 +3,17 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Engine/World.h"
 #include "GameFramework/Pawn.h"
+#include "GameFramework/Actor.h"
 #include "GridSystem.h"
+#include "Apple.h"
+
+// #include "GridSystem.h"
+#include "Kismet/GameplayStatics.h"
+#include "Math/MathFwd.h"
+#include "Math/UnrealMathUtility.h"
+#include "Math/UnrealMathVectorCommon.h"
 #include "SnakePawn.generated.h"
 
 UENUM(BlueprintType)
@@ -48,6 +57,10 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Snake")
 	float speed = 0.1f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Snake")
+	AActor* tailActor;
+
 	float currentLerp = 1;
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

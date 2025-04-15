@@ -37,7 +37,7 @@
 					"SnakeUnreal",
 					"Win64",
 					"Debug",
-					"C:\\Projects\\Unreal\\SnakeUnreal\\SnakeUnreal.uproject",
+					"C:\\Tasks\\SnakeUnrealGame\\SnakeUnreal.uproject",
 					"-waitmutex"
 				],
 				"problemMatcher": "$msCompile",
@@ -54,7 +54,7 @@
 					"SnakeUnreal",
 					"Win64",
 					"Debug",
-					"C:\\Projects\\Unreal\\SnakeUnreal\\SnakeUnreal.uproject",
+					"C:\\Tasks\\SnakeUnrealGame\\SnakeUnreal.uproject",
 					"-waitmutex"
 				],
 				"problemMatcher": "$msCompile",
@@ -74,7 +74,7 @@
 					"SnakeUnreal",
 					"Win64",
 					"Debug",
-					"C:\\Projects\\Unreal\\SnakeUnreal\\SnakeUnreal.uproject",
+					"C:\\Tasks\\SnakeUnrealGame\\SnakeUnreal.uproject",
 					"-waitmutex"
 				],
 				"problemMatcher": "$msCompile",
@@ -91,7 +91,7 @@
 					"SnakeUnreal",
 					"Win64",
 					"DebugGame",
-					"C:\\Projects\\Unreal\\SnakeUnreal\\SnakeUnreal.uproject",
+					"C:\\Tasks\\SnakeUnrealGame\\SnakeUnreal.uproject",
 					"-waitmutex"
 				],
 				"problemMatcher": "$msCompile",
@@ -108,7 +108,7 @@
 					"SnakeUnreal",
 					"Win64",
 					"DebugGame",
-					"C:\\Projects\\Unreal\\SnakeUnreal\\SnakeUnreal.uproject",
+					"C:\\Tasks\\SnakeUnrealGame\\SnakeUnreal.uproject",
 					"-waitmutex"
 				],
 				"problemMatcher": "$msCompile",
@@ -128,7 +128,7 @@
 					"SnakeUnreal",
 					"Win64",
 					"DebugGame",
-					"C:\\Projects\\Unreal\\SnakeUnreal\\SnakeUnreal.uproject",
+					"C:\\Tasks\\SnakeUnrealGame\\SnakeUnreal.uproject",
 					"-waitmutex"
 				],
 				"problemMatcher": "$msCompile",
@@ -145,7 +145,7 @@
 					"SnakeUnreal",
 					"Win64",
 					"Development",
-					"C:\\Projects\\Unreal\\SnakeUnreal\\SnakeUnreal.uproject",
+					"C:\\Tasks\\SnakeUnrealGame\\SnakeUnreal.uproject",
 					"-waitmutex"
 				],
 				"problemMatcher": "$msCompile",
@@ -162,7 +162,7 @@
 					"SnakeUnreal",
 					"Win64",
 					"Development",
-					"C:\\Projects\\Unreal\\SnakeUnreal\\SnakeUnreal.uproject",
+					"C:\\Tasks\\SnakeUnrealGame\\SnakeUnreal.uproject",
 					"-waitmutex"
 				],
 				"problemMatcher": "$msCompile",
@@ -182,7 +182,7 @@
 					"SnakeUnreal",
 					"Win64",
 					"Development",
-					"C:\\Projects\\Unreal\\SnakeUnreal\\SnakeUnreal.uproject",
+					"C:\\Tasks\\SnakeUnrealGame\\SnakeUnreal.uproject",
 					"-waitmutex"
 				],
 				"problemMatcher": "$msCompile",
@@ -199,7 +199,7 @@
 					"SnakeUnreal",
 					"Win64",
 					"Test",
-					"C:\\Projects\\Unreal\\SnakeUnreal\\SnakeUnreal.uproject",
+					"C:\\Tasks\\SnakeUnrealGame\\SnakeUnreal.uproject",
 					"-waitmutex"
 				],
 				"problemMatcher": "$msCompile",
@@ -216,7 +216,7 @@
 					"SnakeUnreal",
 					"Win64",
 					"Test",
-					"C:\\Projects\\Unreal\\SnakeUnreal\\SnakeUnreal.uproject",
+					"C:\\Tasks\\SnakeUnrealGame\\SnakeUnreal.uproject",
 					"-waitmutex"
 				],
 				"problemMatcher": "$msCompile",
@@ -236,7 +236,7 @@
 					"SnakeUnreal",
 					"Win64",
 					"Test",
-					"C:\\Projects\\Unreal\\SnakeUnreal\\SnakeUnreal.uproject",
+					"C:\\Tasks\\SnakeUnrealGame\\SnakeUnreal.uproject",
 					"-waitmutex"
 				],
 				"problemMatcher": "$msCompile",
@@ -253,7 +253,7 @@
 					"SnakeUnreal",
 					"Win64",
 					"Shipping",
-					"C:\\Projects\\Unreal\\SnakeUnreal\\SnakeUnreal.uproject",
+					"C:\\Tasks\\SnakeUnrealGame\\SnakeUnreal.uproject",
 					"-waitmutex"
 				],
 				"problemMatcher": "$msCompile",
@@ -270,7 +270,7 @@
 					"SnakeUnreal",
 					"Win64",
 					"Shipping",
-					"C:\\Projects\\Unreal\\SnakeUnreal\\SnakeUnreal.uproject",
+					"C:\\Tasks\\SnakeUnrealGame\\SnakeUnreal.uproject",
 					"-waitmutex"
 				],
 				"problemMatcher": "$msCompile",
@@ -290,7 +290,7 @@
 					"SnakeUnreal",
 					"Win64",
 					"Shipping",
-					"C:\\Projects\\Unreal\\SnakeUnreal\\SnakeUnreal.uproject",
+					"C:\\Tasks\\SnakeUnrealGame\\SnakeUnreal.uproject",
 					"-waitmutex"
 				],
 				"problemMatcher": "$msCompile",
@@ -307,7 +307,7 @@
 					"SnakeUnrealEditor",
 					"Win64",
 					"Debug",
-					"C:\\Projects\\Unreal\\SnakeUnreal\\SnakeUnreal.uproject",
+					"C:\\Tasks\\SnakeUnrealGame\\SnakeUnreal.uproject",
 					"-waitmutex"
 				],
 				"problemMatcher": "$msCompile",
@@ -324,7 +324,7 @@
 					"SnakeUnrealEditor",
 					"Win64",
 					"Debug",
-					"C:\\Projects\\Unreal\\SnakeUnreal\\SnakeUnreal.uproject",
+					"C:\\Tasks\\SnakeUnrealGame\\SnakeUnreal.uproject",
 					"-waitmutex"
 				],
 				"problemMatcher": "$msCompile",
@@ -344,7 +344,7 @@
 					"SnakeUnrealEditor",
 					"Win64",
 					"Debug",
-					"C:\\Projects\\Unreal\\SnakeUnreal\\SnakeUnreal.uproject",
+					"C:\\Tasks\\SnakeUnrealGame\\SnakeUnreal.uproject",
 					"-waitmutex"
 				],
 				"problemMatcher": "$msCompile",
@@ -361,7 +361,7 @@
 					"SnakeUnrealEditor",
 					"Win64",
 					"DebugGame",
-					"C:\\Projects\\Unreal\\SnakeUnreal\\SnakeUnreal.uproject",
+					"C:\\Tasks\\SnakeUnrealGame\\SnakeUnreal.uproject",
 					"-waitmutex"
 				],
 				"problemMatcher": "$msCompile",
@@ -378,7 +378,7 @@
 					"SnakeUnrealEditor",
 					"Win64",
 					"DebugGame",
-					"C:\\Projects\\Unreal\\SnakeUnreal\\SnakeUnreal.uproject",
+					"C:\\Tasks\\SnakeUnrealGame\\SnakeUnreal.uproject",
 					"-waitmutex"
 				],
 				"problemMatcher": "$msCompile",
@@ -398,7 +398,7 @@
 					"SnakeUnrealEditor",
 					"Win64",
 					"DebugGame",
-					"C:\\Projects\\Unreal\\SnakeUnreal\\SnakeUnreal.uproject",
+					"C:\\Tasks\\SnakeUnrealGame\\SnakeUnreal.uproject",
 					"-waitmutex"
 				],
 				"problemMatcher": "$msCompile",
@@ -415,7 +415,7 @@
 					"SnakeUnrealEditor",
 					"Win64",
 					"Development",
-					"C:\\Projects\\Unreal\\SnakeUnreal\\SnakeUnreal.uproject",
+					"C:\\Tasks\\SnakeUnrealGame\\SnakeUnreal.uproject",
 					"-waitmutex"
 				],
 				"problemMatcher": "$msCompile",
@@ -432,7 +432,7 @@
 					"SnakeUnrealEditor",
 					"Win64",
 					"Development",
-					"C:\\Projects\\Unreal\\SnakeUnreal\\SnakeUnreal.uproject",
+					"C:\\Tasks\\SnakeUnrealGame\\SnakeUnreal.uproject",
 					"-waitmutex"
 				],
 				"problemMatcher": "$msCompile",
@@ -452,7 +452,7 @@
 					"SnakeUnrealEditor",
 					"Win64",
 					"Development",
-					"C:\\Projects\\Unreal\\SnakeUnreal\\SnakeUnreal.uproject",
+					"C:\\Tasks\\SnakeUnrealGame\\SnakeUnreal.uproject",
 					"-waitmutex"
 				],
 				"problemMatcher": "$msCompile",
@@ -469,7 +469,7 @@
 			{
 				"name": "Launch SnakeUnreal (Debug)",
 				"request": "launch",
-				"program": "C:\\Projects\\Unreal\\SnakeUnreal\\Binaries\\Win64\\UnrealGame-Win64-Debug.exe",
+				"program": "C:\\Tasks\\SnakeUnrealGame\\Binaries\\Win64\\UnrealGame-Win64-Debug.exe",
 				"preLaunchTask": "SnakeUnreal Win64 Debug Build",
 				"args": [
 				],
@@ -485,7 +485,7 @@
 			{
 				"name": "Launch SnakeUnreal (DebugGame)",
 				"request": "launch",
-				"program": "C:\\Projects\\Unreal\\SnakeUnreal\\Binaries\\Win64\\UnrealGame-Win64-DebugGame.exe",
+				"program": "C:\\Tasks\\SnakeUnrealGame\\Binaries\\Win64\\UnrealGame-Win64-DebugGame.exe",
 				"preLaunchTask": "SnakeUnreal Win64 DebugGame Build",
 				"args": [
 				],
@@ -501,7 +501,7 @@
 			{
 				"name": "Launch SnakeUnreal (Development)",
 				"request": "launch",
-				"program": "C:\\Projects\\Unreal\\SnakeUnreal\\Binaries\\Win64\\UnrealGame.exe",
+				"program": "C:\\Tasks\\SnakeUnrealGame\\Binaries\\Win64\\UnrealGame.exe",
 				"preLaunchTask": "SnakeUnreal Win64 Development Build",
 				"args": [
 				],
@@ -517,7 +517,7 @@
 			{
 				"name": "Launch SnakeUnreal (Test)",
 				"request": "launch",
-				"program": "C:\\Projects\\Unreal\\SnakeUnreal\\Binaries\\Win64\\UnrealGame-Win64-Test.exe",
+				"program": "C:\\Tasks\\SnakeUnrealGame\\Binaries\\Win64\\UnrealGame-Win64-Test.exe",
 				"preLaunchTask": "SnakeUnreal Win64 Test Build",
 				"args": [
 				],
@@ -533,7 +533,7 @@
 			{
 				"name": "Launch SnakeUnreal (Shipping)",
 				"request": "launch",
-				"program": "C:\\Projects\\Unreal\\SnakeUnreal\\Binaries\\Win64\\UnrealGame-Win64-Shipping.exe",
+				"program": "C:\\Tasks\\SnakeUnrealGame\\Binaries\\Win64\\UnrealGame-Win64-Shipping.exe",
 				"preLaunchTask": "SnakeUnreal Win64 Shipping Build",
 				"args": [
 				],
@@ -552,7 +552,7 @@
 				"program": "C:\\Program Files\\Epic Games\\UE_5.5\\Engine\\Binaries\\Win64\\UnrealEditor-Win64-Debug.exe",
 				"preLaunchTask": "SnakeUnrealEditor Win64 Debug Build",
 				"args": [
-					"C:\\Projects\\Unreal\\SnakeUnreal\\SnakeUnreal.uproject"
+					"C:\\Tasks\\SnakeUnrealGame\\SnakeUnreal.uproject"
 				],
 				"cwd": "C:\\Program Files\\Epic Games\\UE_5.5",
 				"stopAtEntry": false,
@@ -569,7 +569,7 @@
 				"program": "C:\\Program Files\\Epic Games\\UE_5.5\\Engine\\Binaries\\Win64\\UnrealEditor-Win64-DebugGame.exe",
 				"preLaunchTask": "SnakeUnrealEditor Win64 DebugGame Build",
 				"args": [
-					"C:\\Projects\\Unreal\\SnakeUnreal\\SnakeUnreal.uproject"
+					"C:\\Tasks\\SnakeUnrealGame\\SnakeUnreal.uproject"
 				],
 				"cwd": "C:\\Program Files\\Epic Games\\UE_5.5",
 				"stopAtEntry": false,
@@ -586,7 +586,7 @@
 				"program": "C:\\Program Files\\Epic Games\\UE_5.5\\Engine\\Binaries\\Win64\\UnrealEditor.exe",
 				"preLaunchTask": "SnakeUnrealEditor Win64 Development Build",
 				"args": [
-					"C:\\Projects\\Unreal\\SnakeUnreal\\SnakeUnreal.uproject"
+					"C:\\Tasks\\SnakeUnrealGame\\SnakeUnreal.uproject"
 				],
 				"cwd": "C:\\Program Files\\Epic Games\\UE_5.5",
 				"stopAtEntry": false,
@@ -606,7 +606,7 @@
 				"args": [
 					"-projectfiles",
 					"-vscode",
-					"-project=C:\\Projects\\Unreal\\SnakeUnreal\\SnakeUnreal.uproject",
+					"-project=C:\\Tasks\\SnakeUnrealGame\\SnakeUnreal.uproject",
 					"-game",
 					"-engine",
 					"-dotnet"

@@ -2,13 +2,7 @@
 
 
 #include "SnakePawn.h"
-#include "Engine/World.h"
-#include "GameFramework/Actor.h"
-#include "GridSystem.h"
-#include "Kismet/GameplayStatics.h"
-#include "Math/MathFwd.h"
-#include "Math/UnrealMathUtility.h"
-#include "Math/UnrealMathVectorCommon.h"
+
 
 // Sets default values
 ASnakePawn::ASnakePawn()
@@ -52,7 +46,15 @@ void ASnakePawn::Tick(float DeltaTime)
 	if (tailLocations.Num() < size) {
 		FActorSpawnParameters SpawnInfo;
 		//asd
-		ASnakePawn* test = GetWorld()->SpawnActor<ASnakePawn>(ASnakePawn::StaticClass(), GetActorLocation(), GetActorRotation(), SpawnInfo);
+		// ASnakePawn* test = GetWorld()->SpawnActor<ASnakePawn>(ASnakePawn::StaticClass(), GetActorLocation(), GetActorRotation(), SpawnInfo);
+		AApple* test = GetWorld()->SpawnActor<AApple>(AApple::StaticClass(), GetActorLocation(), GetActorRotation(), SpawnInfo);
+		Tail tail{
+			GetActorLocation(),
+			test->GetActorLocation(),
+			currentTile,
+			test
+		};
+		tailLocations.Add(tail);
 		// tailLocations.Add(Tail(
 		// 	test,
 
