@@ -71,7 +71,7 @@ void AGridSystem::CreateGrid(int width, int height){
 	grid.Empty();
 	tiles.Empty();
 	weight.Empty();
-	w = height;
+	h = height;
 	// Size.Y = height;
 	// Size.X = height;
 	int reserveSize = width * height;
@@ -84,21 +84,29 @@ void AGridSystem::CreateGrid(int width, int height){
 			cord += FVector2D(GetActorLocation());
 			grid.Add(cord);
 			weight.Add(0);
-			if(y == 0 || x == 0){
-				tiles.Add(TileEnums::Occupied);
-				if(!wallModel) continue;
-				AActor* test = GetWorld()->SpawnActor<AActor>(wallModel, GetActorLocation(), GetActorRotation());
-				FVector newLocation = FVector(cord.X, cord.Y, GetActorLocation().Z);
-				test->SetActorLocation(newLocation);
+			TileEnums test = TileEnums::Empty;
+			if(y == 0 || x == 0 || x < 10){
+				//tiles.Add(TileEnums::Occupied);
+				test = TileEnums::Occupied;
+				
 			}else{
-				tiles.Add(TileEnums::Empty);				
+				//tiles.Add(TileEnums::Empty);				
 			}
+			tiles.Add(test);
 		}
 	}
+	for (int i = 0; i < tiles.Num(); i++) {
+		if(!wallModel || tiles[i] == TileEnums::Empty) continue;
+		AActor* wall = GetWorld()->SpawnActor<AActor>(wallModel, GetActorLocation(), GetActorRotation());
+		FVector2D test = grid[i];
+		FVector newLocation = FVector(test.X, test.Y, GetActorLocation().Z);
+		wall->SetActorLocation(newLocation);
+	}
+	SpawnApple();
 }
 
 FVector2D AGridSystem::GetTile(int x, int y){
-	int index = y + w * x;
+	int index = y + h * x;
 	if(index >= grid.Num() || index < 0) return FVector2D();
 	return grid[index];
 	
@@ -118,7 +126,7 @@ void AGridSystem::MoveActor(AActor* actor){
 }
 
 FVector2d AGridSystem::NewLocation(FVector2D oldLocation){
-	int index = oldLocation.Y + w * oldLocation.X;
+	int index = oldLocation.Y + h * oldLocation.X;
 	if(index >= grid.Num() || index < 0) return FVector2D();
 
 	FVector2D result = grid[index];
@@ -128,9 +136,19 @@ FVector2d AGridSystem::NewLocation(FVector2D oldLocation){
 FVector2D AGridSystem::GetRandomEmptyTile(){
 	while (true) {
 		int number = FMath::RandRange(0, tiles.Num());
-
+		// if(GEngine){
+		// 	GEngine->AddOnScreenDebugMessage(-1 , 15.f, FColor::Emerald ,FString::Printf(TEXT("Tile is %d"), tiles[number]));
+		// }
 		if(tiles[number] == TileEnums::Empty){
-			return  grid[number] / offset;
+			
+			return  grid[number];
 		}	
 	}
+}
+
+void AGridSystem::SpawnApple(){
+	if(!Apple) return;
+	FVector2D location = GetRandomEmptyTile();
+	
+	AActor* test = GetWorld()->SpawnActor<AActor>(Apple, FVector(location, 0), GetActorRotation());
 }

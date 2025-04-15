@@ -21,7 +21,7 @@ class SNAKEUNREAL_API AGridSystem : public AActor
 	TArray<FVector2d> grid;
 	TArray<float> weight;
 	TArray<TileEnums> tiles;
-	int w = 0;
+	int h = 0;
 public:	
 	// Sets default values for this actor's properties
 	AGridSystem();
@@ -41,6 +41,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Grid")
 	TSubclassOf<AActor> wallModel;
 
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Grid")
+	TSubclassOf<AActor> Apple;
 	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Grid")
 	// FVector2D Size = FVector2D(10, 10);
 
@@ -62,4 +65,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="Grid")
 	FVector2D GetRandomEmptyTile();
+
+	UFUNCTION(BlueprintCallable, Category="Grid")
+	void SpawnApple();
 };
