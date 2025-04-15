@@ -58,20 +58,21 @@ void ASnakePawn::Tick(float DeltaTime)
 	// VectorLerp(currentLocation, targetLocation, currentLerp);
 	if (tailLocations.Num() < size) {
 		FActorSpawnParameters SpawnInfo;
-		//asd
-		// ASnakePawn* test = GetWorld()->SpawnActor<ASnakePawn>(ASnakePawn::StaticClass(), GetActorLocation(), GetActorRotation(), SpawnInfo);
-		AActor* test = GetWorld()->SpawnActor<AActor>(tailActor, GetActorLocation(), GetActorRotation(), SpawnInfo);
+
+		FVector tailLocation = currentLocation;
+		if(tailLocations.Num() > 1){
+			tailLocation = tailLocations.Last().oldLocation;
+		}
+
+		AActor* test = GetWorld()->SpawnActor<AActor>(tailActor, tailLocation, GetActorRotation(), SpawnInfo);
 		Tail tail{
-			GetActorLocation(),
+			tailLocation,
 			test->GetActorLocation(),
 			currentTile,
 			test
 		};
+		
 		tailLocations.Add(tail);
-		// tailLocations.Add(Tail(
-		// 	test,
-
-		// ));
 	}
 	for(int i = 0; i < tailLocations.Num(); i++){
 		//This looks bad

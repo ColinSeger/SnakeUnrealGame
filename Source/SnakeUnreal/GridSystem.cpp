@@ -85,7 +85,7 @@ void AGridSystem::CreateGrid(int width, int height){
 			grid.Add(cord);
 			weight.Add(0);
 			TileEnums test = TileEnums::Empty;
-			if(y == 0 || x == 0 || x < 10){
+			if(y == 0 || x == 0){
 				//tiles.Add(TileEnums::Occupied);
 				test = TileEnums::Occupied;
 				
