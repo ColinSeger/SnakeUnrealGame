@@ -38,6 +38,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Grid")
 	float offset = 1;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Grid")
+	TSubclassOf<AActor> wallModel;
+
 	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Grid")
 	// FVector2D Size = FVector2D(10, 10);
 

@@ -59,7 +59,7 @@ protected:
 	float speed = 0.1f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Snake")
-	AActor* tailActor;
+	TSubclassOf<AActor> tailActor;
 
 	float currentLerp = 1;
 	// Called when the game starts or when spawned

@@ -2,6 +2,8 @@
 
 
 #include "SnakePawn.h"
+#include "GameFramework/Actor.h"
+#include "Math/MathFwd.h"
 
 
 // Sets default values
@@ -34,20 +36,31 @@ void ASnakePawn::Tick(float DeltaTime)
 	currentLerp += speed * DeltaTime;
 
 	if(currentLerp > 1){
+		if(tailLocations.Num() > 0){
+			tailLocations[0].gridLocation = currentTile;
+			tailLocations[0].oldLocation = tailLocations[0].newLocation;
+			tailLocations[0].newLocation = targetLocation;
+
+			for(int i = 1; i < tailLocations.Num(); i++){
+				//This looks bad
+				FVector2D gridDirection = (tailLocations[i].gridLocation - tailLocations[i-1].gridLocation);
+				tailLocations[i].gridLocation += gridDirection;
+				tailLocations[i].oldLocation = tailLocations[i].newLocation;
+				tailLocations[i].newLocation = tailLocations[i-1].oldLocation;
+			}
+		}
 		currentLerp = 0;
 		currentLocation = targetLocation;
 		targetLocation = MoveTile();
+		
 	}
 	SetActorLocation(FMath::Lerp(currentLocation, targetLocation, currentLerp));
 	// VectorLerp(currentLocation, targetLocation, currentLerp);
-	if(tailLocations.Num() <= 1){
-		
-	}
 	if (tailLocations.Num() < size) {
 		FActorSpawnParameters SpawnInfo;
 		//asd
 		// ASnakePawn* test = GetWorld()->SpawnActor<ASnakePawn>(ASnakePawn::StaticClass(), GetActorLocation(), GetActorRotation(), SpawnInfo);
-		AApple* test = GetWorld()->SpawnActor<AApple>(AApple::StaticClass(), GetActorLocation(), GetActorRotation(), SpawnInfo);
+		AActor* test = GetWorld()->SpawnActor<AActor>(tailActor, GetActorLocation(), GetActorRotation(), SpawnInfo);
 		Tail tail{
 			GetActorLocation(),
 			test->GetActorLocation(),

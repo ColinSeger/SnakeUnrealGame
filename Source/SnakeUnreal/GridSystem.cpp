@@ -81,10 +81,15 @@ void AGridSystem::CreateGrid(int width, int height){
 	for(int x = 0; x < width; x++){
 		for(int y = 0; y < height; y++){
 			FVector2D cord = FVector2D(x * offset, y * offset);
+			cord += FVector2D(GetActorLocation());
 			grid.Add(cord);
 			weight.Add(0);
 			if(y == 0 || x == 0){
-				tiles.Add(TileEnums::Occupied);		
+				tiles.Add(TileEnums::Occupied);
+				if(!wallModel) continue;
+				AActor* test = GetWorld()->SpawnActor<AActor>(wallModel, GetActorLocation(), GetActorRotation());
+				FVector newLocation = FVector(cord.X, cord.Y, GetActorLocation().Z);
+				test->SetActorLocation(newLocation);
 			}else{
 				tiles.Add(TileEnums::Empty);				
 			}
