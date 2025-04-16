@@ -4,6 +4,7 @@
 #include "SnakePawn.h"
 #include "GameFramework/Actor.h"
 #include "Math/MathFwd.h"
+#include "Math/UnrealMathUtility.h"
 
 
 // Sets default values
@@ -23,10 +24,15 @@ void ASnakePawn::BeginPlay()
 	if(!gridSystem) return;
 
 	// FVector2D spawn = gridSystem->GetRandomEmptyTile();
+	FVector2D spawn = FVector2D(GetActorLocation() - gridSystem->GetActorLocation());
 	// FVector2D local = gridSystem->GetTile(spawn.X, spawn.Y);
-	// currentTile = spawn;
+	float offset = gridSystem->GetOffset();
+	currentTile = FVector2D(spawn.X / offset, spawn.Y / offset);
 	// FVector newLocation = FVector(local.X, local.Y, 90);
 	// SetActorLocation(newLocation);
+	if(GEngine){
+		GEngine->AddOnScreenDebugMessage(-1 , 15.f, FColor::Emerald ,FString::Printf(TEXT("Starting at %f , %f"), currentTile.X, currentTile.Y));
+	}
 }
 // Called every frame
 void ASnakePawn::Tick(float DeltaTime)
@@ -36,25 +42,9 @@ void ASnakePawn::Tick(float DeltaTime)
 	currentLerp += speed * DeltaTime;
 
 	if(currentLerp > 1){
-		if(tailLocations.Num() > 0){
-			tailLocations[0].gridLocation = currentTile;
-			tailLocations[0].oldLocation = tailLocations[0].newLocation;
-			tailLocations[0].newLocation = targetLocation;
-
-			for(int i = 1; i < tailLocations.Num(); i++){
-				//This looks bad
-				FVector2D gridDirection = (tailLocations[i].gridLocation - tailLocations[i-1].gridLocation);
-				tailLocations[i].gridLocation += gridDirection;
-				tailLocations[i].oldLocation = tailLocations[i].newLocation;
-				tailLocations[i].newLocation = tailLocations[i-1].oldLocation;
-			}
-		}
-		currentLerp = 0;
-		currentLocation = targetLocation;
-		targetLocation = MoveTile();
-		
+		ResetLerpValue();
 	}
-	SetActorLocation(FMath::Lerp(currentLocation, targetLocation, currentLerp));
+	MovementLogic();
 	// VectorLerp(currentLocation, targetLocation, currentLerp);
 	if (tailLocations.Num() < size) {
 		FActorSpawnParameters SpawnInfo;
@@ -73,10 +63,6 @@ void ASnakePawn::Tick(float DeltaTime)
 		};
 		
 		tailLocations.Add(tail);
-	}
-	for(int i = 0; i < tailLocations.Num(); i++){
-		//This looks bad
-		tailLocations[i].tail->SetActorLocation(FMath::Lerp(tailLocations[i].oldLocation, tailLocations[i].newLocation, currentLerp));
 	}
 }
 
@@ -111,23 +97,48 @@ FVector ASnakePawn::MoveTile(){
 	//SetActorLocation(newLocation);
 }
 
-void ASnakePawn::MoveSnake(){
-	FVector2D tileLocation = gridSystem->GetTile(currentTile.X , currentTile.Y);
+// void ASnakePawn::MoveSnake(){
+// 	FVector2D tileLocation = gridSystem->GetTile(currentTile.X , currentTile.Y);
 
-	FVector newLocation = FVector(tileLocation.X, tileLocation.Y, GetActorLocation().Z);
+// 	FVector newLocation = FVector(tileLocation.X, tileLocation.Y, GetActorLocation().Z);
 
-	SetActorLocation(newLocation);
+// 	SetActorLocation(newLocation);
+// }
+
+void ASnakePawn::MovementLogic(){
+	//Lerp the head of snake
+	SetActorLocation(FMath::Lerp(currentLocation, targetLocation, currentLerp));
+
+	//Loop over tails and lerp them
+	for (Tail& tail : tailLocations) {
+		tail.tail->SetActorLocation(FMath::Lerp(tail.oldLocation, tail.newLocation, currentLerp));
+	}
+
+	// for(int i = 0; i < tailLocations.Num(); i++){
+	// 	//This looks bad
+	// 	tailLocations[i].tail->SetActorLocation(FMath::Lerp(tailLocations[i].oldLocation, tailLocations[i].newLocation, currentLerp));
+	// }
 }
 
-void ASnakePawn::MoveTail(){
-	// while (tailLocations.Num() < size) {
-	// 	Tail newTail = Tail{
-	// 		gridSystem,
-	// 		currentTile
-	// 	};
-	// 	tailLocations.Add(newTail);
-	// }
-	// for(int i = 0; i < size; i++){
-	// 	tailLocations[i];
-	// }
+void ASnakePawn::ResetLerpValue(){
+	if(tailLocations.Num() > 0){
+		tailLocations[0].gridLocation = currentTile;
+		tailLocations[0].oldLocation = tailLocations[0].newLocation;
+		tailLocations[0].newLocation = targetLocation;
+
+		for(int i = 1; i < tailLocations.Num(); i++){
+			//This looks bad
+			FVector2D gridDirection = (tailLocations[i].gridLocation - tailLocations[i-1].gridLocation);
+			tailLocations[i].gridLocation += gridDirection;
+			tailLocations[i].oldLocation = tailLocations[i].newLocation;
+			tailLocations[i].newLocation = tailLocations[i-1].oldLocation;
+		}
+	}
+	currentLerp = 0;
+	currentLocation = targetLocation;
+	targetLocation = MoveTile();
+}
+
+void ASnakePawn::AddToTail(int num){
+	size += num;
 }

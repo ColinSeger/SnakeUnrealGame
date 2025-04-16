@@ -40,6 +40,7 @@ public:
 		AActor* tail;
 	};
 protected:
+	UPROPERTY(EditAnywhere, BlueprintReadonly, Category="Snake")
 	FVector2D currentTile;
 	TArray<Tail> tailLocations;
 	
@@ -53,7 +54,7 @@ protected:
 	AGridSystem* gridSystem;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Snake")
-	uint8 size;
+	int size;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Snake")
 	float speed = 0.1f;
@@ -61,12 +62,12 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Snake")
 	TSubclassOf<AActor> tailActor;
 
-	float currentLerp = 1;
+	float currentLerp = 0;
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	void MoveSnake();
-	void MoveTail();
+	void MovementLogic();
+	void ResetLerpValue();
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -76,6 +77,10 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="Snake")
 	FVector MoveTile();
+
 	UFUNCTION(BlueprintCallable, Category="Snake")
 	void SwapDirection(Direction dir);
+
+	UFUNCTION(BlueprintCallable, Category="Snake")
+	void AddToTail(int num);
 };

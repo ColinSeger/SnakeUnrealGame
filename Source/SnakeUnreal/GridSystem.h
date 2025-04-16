@@ -68,4 +68,6 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="Grid")
 	void SpawnApple();
+
+	float GetOffset() const{ return offset;};
 };
