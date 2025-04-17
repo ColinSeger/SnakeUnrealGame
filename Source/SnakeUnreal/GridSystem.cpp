@@ -47,13 +47,28 @@ AGridSystem::AGridSystem()
 	// if(GEngine){
 	// 	GEngine->AddOnScreenDebugMessage(-1 , 15.f, FColor::Emerald ,TEXT("Grid Created"));		
 	// }
+	// CreateGrid(size.X, size.Y);
 }
-
+void AGridSystem::OnConstruction(const FTransform& Transform){
+	grid.Empty();
+	tiles.Empty();
+	weight.Empty();
+	for (AActor*& actor : spawnedActors) {
+		actor->Destroy();
+	}
+	spawnedActors.Empty();
+	CreateGrid(size.X, size.Y);
+	//SpawnApple();
+}
 // Called when the game starts or when spawned
 void AGridSystem::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	if(GEngine){
+		GEngine->AddOnScreenDebugMessage(-1 , 15.f, FColor::Emerald ,TEXT("Grid Created"));
+		GEngine->AddOnScreenDebugMessage(-1 , 15.f, FColor::Emerald ,FString::Printf(TEXT("Tile amount %d"), grid.Num()));
+	}
 }
 
 // Called every frame
@@ -65,16 +80,11 @@ void AGridSystem::Tick(float DeltaTime)
 
 void AGridSystem::CreateGrid(int width, int height){
  	// UE_LOG(LogTemp, Warning, TEXT("Created Grid"))
-	if(GEngine){
-		GEngine->AddOnScreenDebugMessage(-1 , 15.f, FColor::Emerald ,TEXT("Grid Created"));		
-	}
-	grid.Empty();
-	tiles.Empty();
-	weight.Empty();
+	
 	h = height;
 	// Size.Y = height;
 	// Size.X = height;
-	int reserveSize = width * height;
+	uint32 reserveSize = width * height;
 	grid.Reserve(reserveSize);
 	tiles.Reserve(reserveSize);
 	weight.Reserve(reserveSize);
@@ -88,7 +98,6 @@ void AGridSystem::CreateGrid(int width, int height){
 			if(y == 0 || x == 0){
 				//tiles.Add(TileEnums::Occupied);
 				test = TileEnums::Occupied;
-				
 			}else{
 				//tiles.Add(TileEnums::Empty);				
 			}
@@ -101,8 +110,14 @@ void AGridSystem::CreateGrid(int width, int height){
 		FVector2D test = grid[i];
 		FVector newLocation = FVector(test.X, test.Y, GetActorLocation().Z);
 		wall->SetActorLocation(newLocation);
+		spawnedActors.Add(wall);
+		wall->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
 	}
-	SpawnApple();
+	//SpawnApple();
+	if(GEngine){
+		GEngine->AddOnScreenDebugMessage(-1 , 15.f, FColor::Emerald ,TEXT("Grid Created"));
+		GEngine->AddOnScreenDebugMessage(-1 , 15.f, FColor::Emerald ,FString::Printf(TEXT("Tile amount %d"), grid.Num()));
+	}
 }
 
 FVector2D AGridSystem::GetTile(int x, int y){
@@ -150,5 +165,6 @@ void AGridSystem::SpawnApple(){
 	if(!Apple) return;
 	FVector2D location = GetRandomEmptyTile();
 	
-	AActor* test = GetWorld()->SpawnActor<AActor>(Apple, FVector(location, 0), GetActorRotation());
+	AActor* spawnedApple = GetWorld()->SpawnActor<AActor>(Apple, FVector(location, 0), GetActorRotation());
+	spawnedActors.Add(spawnedApple);
 }

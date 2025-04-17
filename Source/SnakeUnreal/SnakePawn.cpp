@@ -21,7 +21,12 @@ void ASnakePawn::BeginPlay()
 	Super::BeginPlay();
 	gridSystem = static_cast<AGridSystem*>(UGameplayStatics::GetActorOfClass(GetWorld(), AGridSystem::StaticClass()));
 
-	if(!gridSystem) return;
+	if(!gridSystem){
+		if(GEngine){
+			GEngine->AddOnScreenDebugMessage(-1 , 15.f, FColor::Emerald ,FString::Printf(TEXT("Could not find grid")));
+		}
+		return;
+	}
 
 	// FVector2D spawn = gridSystem->GetRandomEmptyTile();
 	FVector2D spawn = FVector2D(GetActorLocation() - gridSystem->GetActorLocation());

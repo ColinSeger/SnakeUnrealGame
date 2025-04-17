@@ -7,20 +7,27 @@
 #include "Components/BoxComponent.h"
 #include "GridSystem.generated.h"
 
+UENUM(BlueprintType)
+enum class TileEnums : uint8{
+	Empty,
+	Occupied,
+	Apple
+};
+
 UCLASS()
 class SNAKEUNREAL_API AGridSystem : public AActor
 {
 	GENERATED_BODY()
-	enum class TileEnums{
-		Empty,
-		Occupied,
-		Apple
-	};
+	
 	//You might wonder why I have multiple arrays instead of 1 array with a struct
 	//Basically cache and fun
-	TArray<FVector2d> grid;
+	UPROPERTY(Export)//Exporting since it just would not exist otherwhise
+	TArray<FVector2D> grid;
+	UPROPERTY(Export)
 	TArray<float> weight;
+	UPROPERTY(Export)
 	TArray<TileEnums> tiles;
+	UPROPERTY(Export)
 	int h = 0;
 public:	
 	// Sets default values for this actor's properties
@@ -34,6 +41,8 @@ protected:
 	// UBoxComponent* Box;	
 	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Grid")
 	// FVector test;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Grid")
+	FVector2D size;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Grid")
 	float offset = 1;
@@ -47,9 +56,12 @@ protected:
 	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Grid")
 	// FVector2D Size = FVector2D(10, 10);
 
+	TArray<AActor*> spawnedActors;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+	virtual void OnConstruction(const FTransform& Transform) override;
 
 	UFUNCTION(BlueprintCallable, Category="Grid")
 	void CreateGrid(int width, int height);
