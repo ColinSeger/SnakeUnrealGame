@@ -12,7 +12,6 @@ ASnakePawn::ASnakePawn()
 {
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
 }
 
 // Called when the game starts or when spawned
@@ -94,21 +93,9 @@ FVector ASnakePawn::MoveTile(){
 			currentTile.Y -=1;
 		break;
 	}
-
-	FVector2D tileLocation = gridSystem->GetTile(currentTile.X , currentTile.Y);
-
-	FVector newLocation = FVector(tileLocation.X, tileLocation.Y, 90);
-	return newLocation;
-	//SetActorLocation(newLocation);
+	//Returns vector of tile location
+	return FVector(gridSystem->GetTile(currentTile.X , currentTile.Y), GetActorLocation().Z);
 }
-
-// void ASnakePawn::MoveSnake(){
-// 	FVector2D tileLocation = gridSystem->GetTile(currentTile.X , currentTile.Y);
-
-// 	FVector newLocation = FVector(tileLocation.X, tileLocation.Y, GetActorLocation().Z);
-
-// 	SetActorLocation(newLocation);
-// }
 
 void ASnakePawn::MovementLogic(){
 	//Lerp the head of snake
@@ -118,11 +105,6 @@ void ASnakePawn::MovementLogic(){
 	for (Tail& tail : tailLocations) {
 		tail.tail->SetActorLocation(FMath::Lerp(tail.oldLocation, tail.newLocation, currentLerp));
 	}
-
-	// for(int i = 0; i < tailLocations.Num(); i++){
-	// 	//This looks bad
-	// 	tailLocations[i].tail->SetActorLocation(FMath::Lerp(tailLocations[i].oldLocation, tailLocations[i].newLocation, currentLerp));
-	// }
 }
 
 void ASnakePawn::ResetLerpValue(){
