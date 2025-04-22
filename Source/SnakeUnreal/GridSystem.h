@@ -73,5 +73,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Grid")
 	void SpawnApple();
 
+	FVector2D AStarBetweenTiles(FVector2D origin, FVector2D target);
+
 	float GetOffset() const{ return offset;};
 };

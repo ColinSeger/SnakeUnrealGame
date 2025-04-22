@@ -3,6 +3,7 @@
 
 #include "GridSystem.h"
 #include "Components/BoxComponent.h"
+#include "Containers/Array.h"
 #include "Containers/UnrealString.h"
 #include "CoreGlobals.h"
 #include "Engine/Engine.h"
@@ -15,6 +16,7 @@
 #include "Math/MathFwd.h"
 // #include "Components/BoxComponent.h"
 #include "Math/UnrealMathUtility.h"
+#include "MathUtil.h"
 #include <cmath>
 
 // Sets default values
@@ -118,13 +120,56 @@ FVector2D AGridSystem::GetTile(int x, int y){
 FVector2D AGridSystem::GetRandomEmptyTile(){
 	while (true) {
 		int number = FMath::RandRange(0, tiles.Num());
-		// if(GEngine){
-		// 	GEngine->AddOnScreenDebugMessage(-1 , 15.f, FColor::Emerald ,FString::Printf(TEXT("Tile is %d"), tiles[number]));
-		// }
 		if(tiles[number] == TileEnums::Empty){
 			return  grid[number];
 		}	
 	}
+}
+
+FVector2D AGridSystem::AStarBetweenTiles(FVector2D origin, FVector2D target){
+	FVector2D result = FVector2D();
+	TArray<int> toBeSearched;
+	TArray<int> checkedTiles;
+	int startIndex = origin.Y + h * origin.X;
+	int targetIndex = target.Y + h * target.X;
+	toBeSearched.Add(startIndex);
+	weight[startIndex] = 0;
+
+	TArray<int> indexPath;
+	
+	while (!toBeSearched.IsEmpty()) {
+		int currentTileIndex = toBeSearched[0];
+		for (int index : toBeSearched) {
+			//Makes sure no other tile has a lower value
+			if(weight[currentTileIndex] > toBeSearched.IndexOfByKey(index)){
+				currentTileIndex = toBeSearched.IndexOfByKey(index);
+			}
+		}
+
+		checkedTiles.Add(currentTileIndex);
+		toBeSearched.Remove(currentTileIndex);
+		if(currentTileIndex == targetIndex){
+			result = grid[indexPath[0]];//Change this to actually be next tile to go to
+			return result;
+		}
+		// FVector2D currentTile = grid[currentTileIndex];
+		
+		//Checks neighbors on X axis I think
+		if(!checkedTiles.Contains(currentTileIndex -1)){
+			if (currentTileIndex > 0) {
+				float costToTile = weight[currentTileIndex] + 1;
+			}
+		}
+		if(!checkedTiles.Contains(currentTileIndex +1)){
+			if (currentTileIndex < checkedTiles.Num()) {
+				float costToTile = weight[currentTileIndex] + 1;
+			}
+		}
+
+		checkedTiles.Add(currentTileIndex);
+	}
+
+	return result;
 }
 
 void AGridSystem::SpawnApple(){
