@@ -120,7 +120,7 @@ FVector2D AGridSystem::GetTile(int x, int y){
 
 FVector2D AGridSystem::GetRandomEmptyTile(){
 	while (true) {
-		int number = FMath::RandRange(0, tiles.Num());
+		int number = FMath::RandRange(0, tiles.Num() -1);
 		if(tiles[number] == TileEnums::Empty){
 			return  grid[number];
 		}	
@@ -131,9 +131,20 @@ float GetDistance(FVector2D origin, FVector2D target){
 	int distX = FMath::Abs(origin.X - target.X);
 	int distY = FMath::Abs(origin.Y - target.Y);
 	if(distX > distY){
-		return distY + (distX - distY);
+		return 10* distY + (distX - distY);
 	}else{
-		return distX + (distY - distX);
+		return 10* distX + (distY - distX);
+	}
+}
+int GetStartingTile(TArray<FIntVector2> indexPath){
+	int selectedIndex = indexPath.Num()-1;
+	while (true)
+	{
+		if(indexPath[selectedIndex].X < 1){
+			return indexPath[selectedIndex].Y;
+		}else{
+			selectedIndex = indexPath[selectedIndex].X;
+		}
 	}
 }
 
@@ -158,29 +169,34 @@ FVector2D AGridSystem::AStarBetweenTiles(FVector2D origin, FVector2D target){
 	weightFromStart[startIndex] = 0;
 	weightFromEnd[startIndex] = GetDistance(grid[startIndex], grid[targetIndex]);
 
-	TArray<int> indexPath;
-	indexPath.Add(startIndex);
+	TArray<FIntVector2> indexPath;
+	indexPath.Add(FIntVector2(-1, startIndex));
 
 	while (!toBeSearched.IsEmpty()) {
 		int currentTileIndex = toBeSearched[0];
+		int indexTo = 0;
 		for (int index = 0; index < toBeSearched.Num(); index++) {
 			float currentFCost = weightFromStart[currentTileIndex] + weightFromEnd[currentTileIndex];
 			float searchFCost = weightFromStart[toBeSearched[index]] + weightFromEnd[toBeSearched[index]];
 			//Makes sure no other tile has a lower value
 			if(currentFCost > searchFCost || (currentFCost == searchFCost && weightFromEnd[currentTileIndex] > weightFromEnd[toBeSearched[index]])){
 				currentTileIndex = toBeSearched[index];
+				for(int i = 0; i< indexPath.Num(); i++){
+					if(indexPath[i].Y == toBeSearched[index]){
+						indexTo = i;
+					}
+				}
 			}
 		}
 
 		checkedTiles.Add(currentTileIndex);
 		toBeSearched.Remove(currentTileIndex);
 		if(currentTileIndex == targetIndex){
-			result = grid[indexPath[1]];//Change this to actually be next tile to go to
+			result = grid[GetStartingTile(indexPath)];//Change this to actually be next tile to go to
 			// if(GEngine){
 			// 	GEngine->AddOnScreenDebugMessage(-1 , 1.f, FColor::Emerald ,FString::Printf(TEXT("Tile %d %d"), result.X, result.Y));
 			// }
-			return FVector2D(result.X,result.Y) - FVector2D(GetActorLocation());
-			
+			return FVector2D(result.X,result.Y);
 		}
 		// FVector2D currentTile = grid[currentTileIndex];
 		TArray<int> neighbors;
@@ -189,8 +205,6 @@ FVector2D AGridSystem::AStarBetweenTiles(FVector2D origin, FVector2D target){
 		//Assigns tile index of up down left right
 		neighbors.Add(currentTileIndex-1);
 		neighbors.Add(currentTileIndex+1);
-		// FVector2D indexOf1 = ;
-		FVector2D indexOf2 = FVector2D(grid[currentTileIndex].Y, grid[currentTileIndex].X) - FVector2D(GetActorLocation());
 		neighbors.Add(currentTileIndex+h);
 		neighbors.Add(currentTileIndex-h);
 		//Checks neighbors on Y axis I think
@@ -199,7 +213,8 @@ FVector2D AGridSystem::AStarBetweenTiles(FVector2D origin, FVector2D target){
 			if(neighbors[i] >= grid.Num() || 0 > neighbors[i] || checkedTiles.Contains(neighbors[i])) continue;
 
 			float currentWeight = weightFromStart[currentTileIndex] + 1;
-			weightFromEnd[neighbors[i]] = GetDistance(grid[currentTileIndex], grid[targetIndex]);
+			float endWeight = GetDistance(grid[neighbors[i]], grid[targetIndex]);
+			weightFromEnd[neighbors[i]] = endWeight;
 
 			if(currentWeight < weightFromStart[neighbors[i]] || !toBeSearched.Contains(neighbors[i])){
 				//float Xdistance = FMath::Abs()
@@ -207,11 +222,12 @@ FVector2D AGridSystem::AStarBetweenTiles(FVector2D origin, FVector2D target){
 				if(!toBeSearched.Contains(neighbors[i])){
 					toBeSearched.Add(neighbors[i]);
 				}
-				indexPath.Add(neighbors[i]);
+				indexPath.Add(FIntVector2(indexTo , neighbors[i]));
 			}
 		}
 		neighbors.Empty();
 		checkedTiles.Add(currentTileIndex);
+		// indexTo = indexPath.Num()-1;
 	}
 
 	return result;
@@ -220,6 +236,9 @@ FVector2D AGridSystem::AStarBetweenTiles(FVector2D origin, FVector2D target){
 void AGridSystem::SpawnApple(){
 	if(!Apple) return;
 	FVector2D location = GetRandomEmptyTile();
+
+	appleLocation = location - FVector2D(GetActorLocation());
+	appleLocation /= offset;
 	
 	AActor* spawnedApple = GetWorld()->SpawnActor<AActor>(Apple, FVector(location, 0), GetActorRotation());
 	spawnedActors.Add(spawnedApple);

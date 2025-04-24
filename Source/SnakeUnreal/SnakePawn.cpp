@@ -29,13 +29,20 @@ void ASnakePawn::BeginPlay()
 
 	// FVector2D spawn = gridSystem->GetRandomEmptyTile();
 	FVector2D spawn = FVector2D(GetActorLocation() - gridSystem->GetActorLocation());
+	//spawn = spawn.RoundToVector();
+	
+	int32 x = FMath::RoundToInt32(spawn.X);
+	int32 y = FMath::RoundToInt32(spawn.Y);
 	// FVector2D local = gridSystem->GetTile(spawn.X, spawn.Y);
 	float offset = gridSystem->GetOffset();
-	currentTile = FVector2D(spawn.X / offset, spawn.Y / offset);
+	currentTile = FVector2D(x / offset, y / offset);
+	// I know This is really stupid but for some reason It would not work otherwise
+	currentTile.X = (int)currentTile.X;
+	currentTile.Y = (int)currentTile.Y;
 	// FVector newLocation = FVector(local.X, local.Y, 90);
 	// SetActorLocation(newLocation);
 	if(GEngine){
-		GEngine->AddOnScreenDebugMessage(-1 , 15.f, FColor::Emerald ,FString::Printf(TEXT("Starting at %f , %f"), currentTile.X, currentTile.Y));
+		GEngine->AddOnScreenDebugMessage(-1 , 15.f, FColor::Emerald ,FString::Printf(TEXT("Starting at %d , %d"), (int)currentTile.X, (int)currentTile.Y));
 	}
 }
 // Called every frame

@@ -55,8 +55,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Grid")
 	TSubclassOf<AActor> Apple;
-	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Grid")
-	// FVector2D Size = FVector2D(10, 10);
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Grid")
+	FVector2D appleLocation = FVector2D();
 
 	TArray<AActor*> spawnedActors;
 
