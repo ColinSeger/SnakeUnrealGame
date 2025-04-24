@@ -25,7 +25,9 @@ class SNAKEUNREAL_API AGridSystem : public AActor
 	UPROPERTY(Export)
 	TArray<FVector2D> grid;
 	UPROPERTY(Export)
-	TArray<float> weight;
+	TArray<float> weightFromStart;
+	UPROPERTY(Export)
+	TArray<float> weightFromEnd;
 	UPROPERTY(Export)
 	TArray<TileEnums> tiles;
 	UPROPERTY(Export)
@@ -73,6 +75,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Grid")
 	void SpawnApple();
 
+	UFUNCTION(BlueprintCallable, Category="Grid")
 	FVector2D AStarBetweenTiles(FVector2D origin, FVector2D target);
 
 	float GetOffset() const{ return offset;};

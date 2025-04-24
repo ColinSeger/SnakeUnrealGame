@@ -54,7 +54,7 @@ AGridSystem::AGridSystem()
 void AGridSystem::OnConstruction(const FTransform& Transform){
 	grid.Empty();
 	tiles.Empty();
-	weight.Empty();
+	weightFromStart.Empty();
 	for (AActor*& actor : spawnedActors) {
 		actor->Destroy();
 	}
@@ -82,13 +82,14 @@ void AGridSystem::CreateGrid(int width, int height){
 	uint32 reserveSize = width * height;
 	grid.Reserve(reserveSize);
 	tiles.Reserve(reserveSize);
-	weight.Reserve(reserveSize);
+	weightFromStart.Reserve(reserveSize);
 	for(int x = 0; x < width; x++){
 		for(int y = 0; y < height; y++){
 			FVector2D cord = FVector2D(x * offset, y * offset);
 			cord += FVector2D(GetActorLocation());
 			grid.Add(cord);
-			weight.Add(0);
+			weightFromStart.Add(reserveSize);
+			weightFromEnd.Add(reserveSize);
 			TileEnums tileStatus = TileEnums::Empty;
 			if(y == 0 || x == 0 || x == width-1 || y == height-1){
 				//tiles.Add(TileEnums::Occupied);
@@ -126,46 +127,90 @@ FVector2D AGridSystem::GetRandomEmptyTile(){
 	}
 }
 
+float GetDistance(FVector2D origin, FVector2D target){
+	int distX = FMath::Abs(origin.X - target.X);
+	int distY = FMath::Abs(origin.Y - target.Y);
+	if(distX > distY){
+		return distY + (distX - distY);
+	}else{
+		return distX + (distY - distX);
+	}
+}
+
 FVector2D AGridSystem::AStarBetweenTiles(FVector2D origin, FVector2D target){
 	FVector2D result = FVector2D();
+	for(float weight : weightFromStart){
+		weight = INFINITY;
+	}
+	for(float weight : weightFromEnd){
+		weight = INFINITY;
+	}
 	TArray<int> toBeSearched;
 	TArray<int> checkedTiles;
+
 	int startIndex = origin.Y + h * origin.X;
 	int targetIndex = target.Y + h * target.X;
+	if(startIndex == targetIndex){
+		return FVector2D();
+	}
+
 	toBeSearched.Add(startIndex);
-	weight[startIndex] = 0;
+	weightFromStart[startIndex] = 0;
+	weightFromEnd[startIndex] = GetDistance(grid[startIndex], grid[targetIndex]);
 
 	TArray<int> indexPath;
-	
+	indexPath.Add(startIndex);
+
 	while (!toBeSearched.IsEmpty()) {
 		int currentTileIndex = toBeSearched[0];
-		for (int index : toBeSearched) {
+		for (int index = 0; index < toBeSearched.Num(); index++) {
+			float currentFCost = weightFromStart[currentTileIndex] + weightFromEnd[currentTileIndex];
+			float searchFCost = weightFromStart[toBeSearched[index]] + weightFromEnd[toBeSearched[index]];
 			//Makes sure no other tile has a lower value
-			if(weight[currentTileIndex] > toBeSearched.IndexOfByKey(index)){
-				currentTileIndex = toBeSearched.IndexOfByKey(index);
+			if(currentFCost > searchFCost || (currentFCost == searchFCost && weightFromEnd[currentTileIndex] > weightFromEnd[toBeSearched[index]])){
+				currentTileIndex = toBeSearched[index];
 			}
 		}
 
 		checkedTiles.Add(currentTileIndex);
 		toBeSearched.Remove(currentTileIndex);
 		if(currentTileIndex == targetIndex){
-			result = grid[indexPath[0]];//Change this to actually be next tile to go to
-			return result;
+			result = grid[indexPath[1]];//Change this to actually be next tile to go to
+			// if(GEngine){
+			// 	GEngine->AddOnScreenDebugMessage(-1 , 1.f, FColor::Emerald ,FString::Printf(TEXT("Tile %d %d"), result.X, result.Y));
+			// }
+			return FVector2D(result.X,result.Y) - FVector2D(GetActorLocation());
+			
 		}
 		// FVector2D currentTile = grid[currentTileIndex];
-		
-		//Checks neighbors on X axis I think
-		if(!checkedTiles.Contains(currentTileIndex -1)){
-			if (currentTileIndex > 0) {
-				float costToTile = weight[currentTileIndex] + 1;
-			}
-		}
-		if(!checkedTiles.Contains(currentTileIndex +1)){
-			if (currentTileIndex < checkedTiles.Num()) {
-				float costToTile = weight[currentTileIndex] + 1;
-			}
-		}
+		TArray<int> neighbors;
+		neighbors.Reserve(4);
 
+		//Assigns tile index of up down left right
+		neighbors.Add(currentTileIndex-1);
+		neighbors.Add(currentTileIndex+1);
+		// FVector2D indexOf1 = ;
+		FVector2D indexOf2 = FVector2D(grid[currentTileIndex].Y, grid[currentTileIndex].X) - FVector2D(GetActorLocation());
+		neighbors.Add(currentTileIndex+h);
+		neighbors.Add(currentTileIndex-h);
+		//Checks neighbors on Y axis I think
+		for(int i = 0; i < neighbors.Num(); i++){
+			//If out of bounds or has already been checked it moves on
+			if(neighbors[i] >= grid.Num() || 0 > neighbors[i] || checkedTiles.Contains(neighbors[i])) continue;
+
+			float currentWeight = weightFromStart[currentTileIndex] + 1;
+			weightFromEnd[neighbors[i]] = GetDistance(grid[currentTileIndex], grid[targetIndex]);
+
+			if(currentWeight < weightFromStart[neighbors[i]] || !toBeSearched.Contains(neighbors[i])){
+				//float Xdistance = FMath::Abs()
+				weightFromStart[neighbors[i]] = currentWeight;
+				if(!toBeSearched.Contains(neighbors[i])){
+					toBeSearched.Add(neighbors[i]);
+				}
+				indexPath.Add(neighbors[i]);
+			}
+		}
+		neighbors.Empty();
 		checkedTiles.Add(currentTileIndex);
 	}
 
