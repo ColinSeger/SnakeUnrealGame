@@ -56,12 +56,14 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Grid")
 	TSubclassOf<AActor> Apple;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Grid")
-	FVector2D appleLocation = FVector2D();
-
 	TArray<AActor*> spawnedActors;
 
-public:	
+	TArray<int> GetNeighbors(int index);
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Grid")
+	FVector2D appleLocation = FVector2D();
+	
 	virtual void OnConstruction(const FTransform& Transform) override;
 
 	UFUNCTION(BlueprintCallable, Category="Grid")
@@ -72,6 +74,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="Grid")
 	FVector2D GetRandomEmptyTile();
+
+	UFUNCTION(BlueprintCallable, Category="Grid")
+	void ChangeTileStatus(FVector2D location, TileEnums newType);
 
 	UFUNCTION(BlueprintCallable, Category="Grid")
 	void SpawnApple();

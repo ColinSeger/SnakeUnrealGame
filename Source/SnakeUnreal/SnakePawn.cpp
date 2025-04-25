@@ -61,16 +61,22 @@ void ASnakePawn::Tick(float DeltaTime)
 		FActorSpawnParameters SpawnInfo;
 
 		FVector tailLocation = currentLocation;
-		if(tailLocations.Num() > 1){
+		FVector2D gridLocation;
+		if(tailLocations.Num()> 0){
+			gridLocation = tailLocations.Last().gridLocation;
+		}else{
+			gridLocation = currentTile;
+		}
+		if(tailLocations.Num() >= 1){
 			tailLocation = tailLocations.Last().oldLocation;
 		}
 
-		AActor* test = GetWorld()->SpawnActor<AActor>(tailActor, tailLocation, GetActorRotation(), SpawnInfo);
+		AActor* spawnedTail = GetWorld()->SpawnActor<AActor>(tailActor, tailLocation, GetActorRotation(), SpawnInfo);
 		Tail tail{
 			tailLocation,
-			test->GetActorLocation(),
-			currentTile,
-			test
+			spawnedTail->GetActorLocation(),
+			gridLocation,
+			spawnedTail
 		};
 		
 		tailLocations.Add(tail);
@@ -116,17 +122,22 @@ void ASnakePawn::MovementLogic(){
 
 void ASnakePawn::ResetLerpValue(){
 	if(tailLocations.Num() > 0){
+		for(int i = 0; i< tailLocations.Num(); i++){
+			gridSystem->ChangeTileStatus(tailLocations[i].gridLocation, TileEnums::Empty);
+		}
+		for(int i = tailLocations.Num() -1; i >= 1; i--){
+			//This looks bad
+			FVector2D gridDirection = (tailLocations[i-1].gridLocation - tailLocations[i].gridLocation);
+			if(gridDirection.X != 0 || gridDirection.Y != 0){
+				tailLocations[i].gridLocation += gridDirection;
+				gridSystem->ChangeTileStatus(tailLocations[i].gridLocation, TileEnums::Occupied);
+			}
+			tailLocations[i].oldLocation = tailLocations[i].newLocation;
+			tailLocations[i].newLocation = tailLocations[i-1].newLocation;
+		}
 		tailLocations[0].gridLocation = currentTile;
 		tailLocations[0].oldLocation = tailLocations[0].newLocation;
 		tailLocations[0].newLocation = targetLocation;
-
-		for(int i = 1; i < tailLocations.Num(); i++){
-			//This looks bad
-			FVector2D gridDirection = (tailLocations[i].gridLocation - tailLocations[i-1].gridLocation);
-			tailLocations[i].gridLocation += gridDirection;
-			tailLocations[i].oldLocation = tailLocations[i].newLocation;
-			tailLocations[i].newLocation = tailLocations[i-1].oldLocation;
-		}
 	}
 	currentLerp = 0;
 	currentLocation = targetLocation;

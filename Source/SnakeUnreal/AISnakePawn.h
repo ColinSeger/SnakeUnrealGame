@@ -13,5 +13,5 @@ UCLASS()
 class SNAKEUNREAL_API AAISnakePawn : public ASnakePawn
 {
 	GENERATED_BODY()
-	
+	virtual void Tick(float DeltaTime) override;
 };
