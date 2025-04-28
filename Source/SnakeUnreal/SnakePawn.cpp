@@ -53,7 +53,7 @@ void ASnakePawn::Tick(float DeltaTime)
 	currentLerp += speed * DeltaTime;
 
 	if(currentLerp > 1){
-		ResetLerpValue();
+		// ResetLerpValue();
 	}
 	MovementLogic();
 	// VectorLerp(currentLocation, targetLocation, currentLerp);
@@ -107,7 +107,7 @@ FVector ASnakePawn::MoveTile(){
 		break;
 	}
 	//Returns vector of tile location
-	return FVector(gridSystem->GetTile(currentTile.X , currentTile.Y), GetActorLocation().Z);
+	return FVector(gridSystem->GetTile(currentTile.X , currentTile.Y), 90);
 }
 
 void ASnakePawn::MovementLogic(){

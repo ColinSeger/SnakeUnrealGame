@@ -132,9 +132,9 @@ float GetDistance(FVector2D origin, FVector2D target){
 	int distY = FMath::Abs(origin.Y - target.Y);
 	if(distX > distY){
 		return 10* distY +10* (distX - distY);
-	}else{
-		return 10* distX +10* (distY - distX);
 	}
+	return 10* distX +10* (distY - distX);
+	
 }
 int GetStartingTile(TArray<FIntVector2> indexPath){
 	int selectedIndex = indexPath.Num()-1;
@@ -176,7 +176,8 @@ FVector2D AGridSystem::AStarBetweenTiles(FVector2D origin, FVector2D target){
 	}
 
 	toBeSearched.Add(startIndex);
-	weightFromStart[startIndex] = 0;
+	weightFromStart[startIndex] = 20;
+	int ay = 0;
 	weightFromEnd[startIndex] = GetDistance(grid[startIndex], grid[targetIndex]);
 
 	TArray<FIntVector2> indexPath;
@@ -185,18 +186,18 @@ FVector2D AGridSystem::AStarBetweenTiles(FVector2D origin, FVector2D target){
 	while (!toBeSearched.IsEmpty()) {
 		int currentTileIndex = toBeSearched[0];
 		int indexTo = 0;
-		for (int index = 1; index < toBeSearched.Num(); index++) {
+		for (int index = 0; index < toBeSearched.Num(); index++) {
 			float currentFCost = weightFromStart[currentTileIndex] + weightFromEnd[currentTileIndex];
 			float searchFCost = weightFromStart[toBeSearched[index]] + weightFromEnd[toBeSearched[index]];
 			//Makes sure no other tile has a lower value
 			if(currentFCost > searchFCost || (currentFCost == searchFCost && weightFromEnd[currentTileIndex] > weightFromEnd[toBeSearched[index]])){
-				currentTileIndex = toBeSearched[index];
 				for(int i = 0; i< indexPath.Num(); i++){
 					if(indexPath[i].Y == toBeSearched[index]){
 						indexTo = i;
 						break;
 					}
 				}
+				currentTileIndex = toBeSearched[index];
 			}
 		}
 
@@ -206,6 +207,14 @@ FVector2D AGridSystem::AStarBetweenTiles(FVector2D origin, FVector2D target){
 		if(currentTileIndex == targetIndex){
 			//Gets index of best tile to move to
 			result = grid[GetStartingTile(indexPath)];
+			int selIndex = indexPath.Last().X;
+			for (int i = selIndex; i > 0; i = indexPath[i].X)
+			{
+				FVector v = FVector(grid[indexPath[i].Y], 90);
+				FVector v2 = FVector(grid[indexPath[indexPath[i].X].Y], 90);
+				DrawDebugLine(GetWorld(), v, v2, FColor::Blue, true, 10.f);
+			}
+			
 			return FVector2D(result.X,result.Y);
 		}
 		TArray<int> neighbors = GetNeighbors(currentTileIndex);
@@ -214,7 +223,7 @@ FVector2D AGridSystem::AStarBetweenTiles(FVector2D origin, FVector2D target){
 		for(int i = 0; i < neighbors.Num(); i++){
 			//If out of bounds or has already been checked it moves on
 			if(neighbors[i] >= grid.Num() || 0 > neighbors[i] || checkedTiles.Contains(neighbors[i])) continue;
-			float currentWeight = weightFromStart[currentTileIndex] + 10;
+			float currentWeight = ay + 10;
 			float endWeight = GetDistance(grid[neighbors[i]], grid[targetIndex]);
 			if(tiles[neighbors[i]] != TileEnums::Empty){
 				currentWeight = INFINITY;
@@ -230,6 +239,7 @@ FVector2D AGridSystem::AStarBetweenTiles(FVector2D origin, FVector2D target){
 				indexPath.Add(FIntVector2(indexTo , neighbors[i]));
 			}
 		}
+		ay+=10;
 	}
 
 	return result;
