@@ -127,7 +127,7 @@ FVector2D AGridSystem::GetRandomEmptyTile(){
 	}
 }
 
-float GetDistance(FVector2D origin, FVector2D target){
+inline float GetDistance(FVector2D origin, FVector2D target){
 	int distX = FMath::Abs(origin.X - target.X);
 	int distY = FMath::Abs(origin.Y - target.Y);
 	if(distX > distY){
@@ -147,7 +147,7 @@ int GetStartingTile(TArray<FIntVector2> indexPath){
 		}
 	}
 }
-TArray<int> AGridSystem::GetNeighbors(int index){
+inline TArray<int> AGridSystem::GetNeighbors(int index){
 	TArray<int> neighbors;
 	neighbors.Reserve(4);
 
@@ -190,7 +190,7 @@ FVector2D AGridSystem::AStarBetweenTiles(FVector2D origin, FVector2D target){
 			float currentFCost = weightFromStart[currentTileIndex] + weightFromEnd[currentTileIndex];
 			float searchFCost = weightFromStart[toBeSearched[index]] + weightFromEnd[toBeSearched[index]];
 			//Makes sure no other tile has a lower value
-			if(currentFCost > searchFCost || (currentFCost == searchFCost && weightFromEnd[currentTileIndex] > weightFromEnd[toBeSearched[index]])){
+			if(currentFCost > searchFCost || (currentFCost == searchFCost && weightFromEnd[toBeSearched[index]] < weightFromEnd[currentTileIndex])){
 				for(int i = 0; i< indexPath.Num(); i++){
 					if(indexPath[i].Y == toBeSearched[index]){
 						indexTo = i;
@@ -212,7 +212,7 @@ FVector2D AGridSystem::AStarBetweenTiles(FVector2D origin, FVector2D target){
 			{
 				FVector v = FVector(grid[indexPath[i].Y], 90);
 				FVector v2 = FVector(grid[indexPath[indexPath[i].X].Y], 90);
-				DrawDebugLine(GetWorld(), v, v2, FColor::Blue, true, 10.f);
+				DrawDebugLine(GetWorld(), v, v2, FColor::Blue, false, 10.f);
 			}
 			
 			return FVector2D(result.X,result.Y);
