@@ -40,10 +40,10 @@ void AAISnakePawn::Tick(float DeltaTime){
                 direction = Direction::Forward;
             }
         }
-        if(GEngine){
-            GEngine->AddOnScreenDebugMessage(-1 , 15.f, FColor::Emerald ,FString::Printf(TEXT("Starting at %d , %d"), (int)test.X, (int)test.Y));
-        }
+        // if(GEngine){
+        //     GEngine->AddOnScreenDebugMessage(-1 , 15.f, FColor::Emerald ,FString::Printf(TEXT("Starting at %d , %d"), (int)test.X, (int)test.Y));
+        // }
 
-        ResetLerpValue();
+        //ResetLerpValue();
     }
 }

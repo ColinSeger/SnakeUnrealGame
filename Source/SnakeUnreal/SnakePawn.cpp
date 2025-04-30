@@ -46,8 +46,8 @@ void ASnakePawn::BeginPlay()
 	}
 }
 // Called every frame
-void ASnakePawn::Tick(float DeltaTime)
-{
+void ASnakePawn::Tick(float DeltaTime){
+
 	Super::Tick(DeltaTime);
 	
 	currentLerp += speed * DeltaTime;
@@ -55,42 +55,21 @@ void ASnakePawn::Tick(float DeltaTime)
 	if(currentLerp > 1){
 		// ResetLerpValue();
 	}
-	MovementLogic();
+	// MovementLogic();
 	// VectorLerp(currentLocation, targetLocation, currentLerp);
-	if (tailLocations.Num() < size) {
-		FActorSpawnParameters SpawnInfo;
 
-		FVector tailLocation = currentLocation;
-		FVector2D gridLocation;
-		if(tailLocations.Num()> 0){
-			gridLocation = tailLocations.Last().gridLocation;
-		}else{
-			gridLocation = currentTile;
-		}
-		if(tailLocations.Num() >= 1){
-			tailLocation = tailLocations.Last().oldLocation;
-		}
-
-		AActor* spawnedTail = GetWorld()->SpawnActor<AActor>(tailActor, tailLocation, GetActorRotation(), SpawnInfo);
-		Tail tail{
-			tailLocation,
-			spawnedTail->GetActorLocation(),
-			gridLocation,
-			spawnedTail
-		};
-		
-		tailLocations.Add(tail);
-	}
+	// TailSizeCheck();
 }
 
 // Called to bind functionality to input
-void ASnakePawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
+void ASnakePawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent){
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
+
 void ASnakePawn::SwapDirection(Direction dir){
 	this->direction = dir;
 }
+
 FVector ASnakePawn::MoveTile(){
 	switch (direction) {
 		case Direction::Forward:
@@ -146,4 +125,39 @@ void ASnakePawn::ResetLerpValue(){
 
 void ASnakePawn::AddToTail(int num){
 	size += num;
+}
+
+void ASnakePawn::TailSizeCheck(){
+	if (tailLocations.Num() >= size) {
+		return;
+	}
+	FActorSpawnParameters SpawnInfo;
+
+	FVector tailLocation = currentLocation;
+	FVector2D gridLocation;
+	if(tailLocations.Num()> 0){
+		gridLocation = tailLocations.Last().gridLocation;
+	}else{
+		gridLocation = currentTile;
+	}
+	if(tailLocations.Num() >= 1){
+		tailLocation = tailLocations.Last().oldLocation;
+	}
+
+	AActor* spawnedTail = GetWorld()->SpawnActor<AActor>(tailActor, tailLocation, GetActorRotation(), SpawnInfo);
+	Tail tail{
+		tailLocation,
+		spawnedTail->GetActorLocation(),
+		gridLocation,
+		spawnedTail
+	};
+	
+	tailLocations.Add(tail);
+}
+
+void ASnakePawn::BeginDestroy(){
+	Super::BeginDestroy();
+	for(int i = 0; i < tailLocations.Num(); i++){
+		tailLocations[i].tail->Destroy();
+	}
 }

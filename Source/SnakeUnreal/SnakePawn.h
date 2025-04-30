@@ -65,8 +65,15 @@ protected:
 	float currentLerp = 0;
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	virtual void BeginDestroy() override;
 
+	UFUNCTION(BlueprintCallable, Category="Snake")
+	void TailSizeCheck();
+
+	UFUNCTION(BlueprintCallable, Category="Snake")
 	void MovementLogic();
+
+	UFUNCTION(BlueprintCallable, Category="Snake")
 	void ResetLerpValue();
 public:	
 	// Called every frame
@@ -83,4 +90,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="Snake")
 	void AddToTail(int num);
+
+	UFUNCTION(BlueprintCallable, Category="Snake")
+	float GetLerpValue()const {return currentLerp;};
 };
