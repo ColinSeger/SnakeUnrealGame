@@ -177,7 +177,6 @@ FVector2D AGridSystem::AStarBetweenTiles(FVector2D origin, FVector2D target){
 
 	toBeSearched.Add(startIndex);
 	weightFromStart[startIndex] = 20;
-	int ay = 0;
 	weightFromEnd[startIndex] = GetDistance(grid[startIndex], grid[targetIndex]);
 
 	TArray<FIntVector2> indexPath;
@@ -207,6 +206,7 @@ FVector2D AGridSystem::AStarBetweenTiles(FVector2D origin, FVector2D target){
 		if(currentTileIndex == targetIndex){
 			//Gets index of best tile to move to
 			result = grid[GetStartingTile(indexPath)];
+			/*
 			int selIndex = indexPath.Last().X;
 			for (int i = selIndex; i > 0; i = indexPath[i].X)
 			{
@@ -214,7 +214,7 @@ FVector2D AGridSystem::AStarBetweenTiles(FVector2D origin, FVector2D target){
 				FVector v2 = FVector(grid[indexPath[indexPath[i].X].Y], 90);
 				DrawDebugLine(GetWorld(), v, v2, FColor::Blue, false, 10.f);
 			}
-			
+			*/
 			return FVector2D(result.X,result.Y);
 		}
 		TArray<int> neighbors = GetNeighbors(currentTileIndex);
@@ -222,13 +222,9 @@ FVector2D AGridSystem::AStarBetweenTiles(FVector2D origin, FVector2D target){
 		//Checks neighbors distance to target
 		for(int i = 0; i < neighbors.Num(); i++){
 			//If out of bounds or has already been checked it moves on
-			if(neighbors[i] >= grid.Num() || 0 > neighbors[i] || checkedTiles.Contains(neighbors[i])) continue;
-			float currentWeight = ay + 10;
+			if(neighbors[i] >= grid.Num() || 0 > neighbors[i] || checkedTiles.Contains(neighbors[i]) || tiles[neighbors[i]] != TileEnums::Empty) continue;
+			float currentWeight = weightFromStart[currentTileIndex] + 10;
 			float endWeight = GetDistance(grid[neighbors[i]], grid[targetIndex]);
-			if(tiles[neighbors[i]] != TileEnums::Empty){
-				currentWeight = INFINITY;
-				// continue;
-			}
 			weightFromEnd[neighbors[i]] = endWeight;
 
 			if(currentWeight < weightFromStart[neighbors[i]] || !toBeSearched.Contains(neighbors[i])){
@@ -239,7 +235,6 @@ FVector2D AGridSystem::AStarBetweenTiles(FVector2D origin, FVector2D target){
 				indexPath.Add(FIntVector2(indexTo , neighbors[i]));
 			}
 		}
-		ay+=10;
 	}
 
 	return result;

@@ -11,7 +11,10 @@ enum class EGameMode : uint8{
 	NoState,
 	MenuState,
 	PlayState,
-	PauseState
+	PauseState,
+	OnePlayer,
+	TwoPlayer,
+	VsAI
 };
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnGameModeChanged, EGameMode, OldGameMode, EGameMode, NewGameMode);
