@@ -83,21 +83,44 @@ void AGridSystem::CreateGrid(int width, int height){
 	grid.Reserve(reserveSize);
 	tiles.Reserve(reserveSize);
 	weightFromStart.Reserve(reserveSize);
-	for(int x = 0; x < width; x++){
-		for(int y = 0; y < height; y++){
-			FVector2D cord = FVector2D(x * offset, y * offset);
-			cord += FVector2D(GetActorLocation());
-			grid.Add(cord);
-			weightFromStart.Add(reserveSize);
-			weightFromEnd.Add(reserveSize);
-			TileEnums tileStatus = TileEnums::Empty;
-			if(y == 0 || x == 0 || x == width-1 || y == height-1){
-				//tiles.Add(TileEnums::Occupied);
-				tileStatus = TileEnums::Occupied;
+
+	TArray<FString> lines;
+	FString filepath = FPaths::ProjectDir() + TEXT("Levels/Map1.txt");
+
+	if(FFileHelper::LoadFileToStringArray(lines, *filepath)){
+		for(int x = 0; x < lines[0].Len(); x++){
+			for(int y = 0; y < lines.Num(); y++){
+				FVector2D cord = FVector2D(x * offset, y * offset);
+				cord += FVector2D(GetActorLocation());
+				grid.Add(cord);
+				weightFromStart.Add(reserveSize);
+				weightFromEnd.Add(reserveSize);
+				TileEnums tileStatus = TileEnums::Empty;
+				if(lines[x][y] == '1'){
+					//tiles.Add(TileEnums::Occupied);
+					tileStatus = TileEnums::Occupied;
+				}
+				tiles.Add(tileStatus);
 			}
-			tiles.Add(tileStatus);
 		}
+	}else{
+		for(int x = 0; x < width; x++){
+			for(int y = 0; y < height; y++){
+				FVector2D cord = FVector2D(x * offset, y * offset);
+				cord += FVector2D(GetActorLocation());
+				grid.Add(cord);
+				weightFromStart.Add(reserveSize);
+				weightFromEnd.Add(reserveSize);
+				TileEnums tileStatus = TileEnums::Empty;
+				if(y == 0 || x == 0 || x == width-1 || y == height-1){
+					//tiles.Add(TileEnums::Occupied);
+					tileStatus = TileEnums::Occupied;
+				}
+				tiles.Add(tileStatus);
+			}
+		}		
 	}
+
 	for (int i = 0; i < tiles.Num(); i++) {
 		if(!wallModel || tiles[i] == TileEnums::Empty) continue;
 		FVector spawnLocation = FVector(grid[i], GetActorLocation().Z);
