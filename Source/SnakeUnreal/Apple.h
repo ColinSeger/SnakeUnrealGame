@@ -26,7 +26,7 @@ public:
 	UInstancedStaticMeshComponent* InstancedFloors;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	TSubclassOf<AActor> DoorActor;
+	TSubclassOf<UParticleSystem> Particle;
 
 	UPROPERTY()
 	TArray<AActor*> SpawnedActors;

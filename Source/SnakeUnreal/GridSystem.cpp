@@ -88,18 +88,22 @@ void AGridSystem::CreateGrid(int width, int height){
 	FString filepath = FPaths::ProjectDir() + TEXT("Levels/Map1.txt");
 
 	if(FFileHelper::LoadFileToStringArray(lines, *filepath)){
-		for(int x = 0; x < lines[0].Len(); x++){
-			for(int y = 0; y < lines.Num(); y++){
+		h = lines[0].Len();
+		for(int x = 0; x < lines.Num(); x++){
+			for(int y = 0; y < lines[0].Len(); y++){
 				FVector2D cord = FVector2D(x * offset, y * offset);
 				cord += FVector2D(GetActorLocation());
 				grid.Add(cord);
 				weightFromStart.Add(reserveSize);
 				weightFromEnd.Add(reserveSize);
 				TileEnums tileStatus = TileEnums::Empty;
-				if(lines[x][y] == '1'){
-					//tiles.Add(TileEnums::Occupied);
-					tileStatus = TileEnums::Occupied;
+				if(lines.Num() > x && lines[x].Len() > y){
+					if(lines[x][y] == '1'){
+						//tiles.Add(TileEnums::Occupied);
+						tileStatus = TileEnums::Occupied;
+					}
 				}
+				
 				tiles.Add(tileStatus);
 			}
 		}
