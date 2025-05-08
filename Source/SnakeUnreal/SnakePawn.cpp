@@ -125,6 +125,7 @@ void ASnakePawn::ResetLerpValue(){
 
 void ASnakePawn::AddToTail(int num){
 	size += num;
+	scoreChanged.Broadcast(size);
 }
 
 void ASnakePawn::TailSizeCheck(){

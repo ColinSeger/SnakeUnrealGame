@@ -8,8 +8,6 @@
 #include "GameFramework/Actor.h"
 #include "GridSystem.h"
 #include "Apple.h"
-
-// #include "GridSystem.h"
 #include "Kismet/GameplayStatics.h"
 #include "Math/MathFwd.h"
 #include "Math/UnrealMathUtility.h"
@@ -24,14 +22,17 @@ UENUM(BlueprintType)
 	Right
 };
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FScoreChanged, int, Score);
 UCLASS()
 class SNAKEUNREAL_API ASnakePawn : public APawn
 {
 	GENERATED_BODY()
-
 public:
 	// Sets default values for this pawn's properties
 	ASnakePawn();
+		
+	UPROPERTY(BlueprintAssignable, Category= "Snake")
+	FScoreChanged scoreChanged;
 	struct Tail{
 		//TUniqeptr
 		FVector newLocation;
@@ -81,6 +82,8 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+
 
 	UFUNCTION(BlueprintCallable, Category="Snake")
 	FVector MoveTile();
