@@ -8,3 +8,15 @@ void USnakeInstanceSubsystem::ChangeMode(EGameMode newGameMode){
     gameModeChanged.Broadcast(gameMode, newGameMode);
     gameMode = newGameMode;
 }
+
+void USnakeInstanceSubsystem::SetScores(TArray<int> score){
+    scores = score;
+}
+
+void USnakeInstanceSubsystem::NextMapID(){
+    mapID++;
+}
+
+void USnakeInstanceSubsystem::SetMapID(int id){
+    mapID = id;
+}

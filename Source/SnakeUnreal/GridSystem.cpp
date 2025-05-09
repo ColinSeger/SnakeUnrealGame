@@ -22,34 +22,7 @@
 // Sets default values
 AGridSystem::AGridSystem()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	// PrimaryActorTick.bCanEverTick = true;
-
-	// Box = CreateDefaultSubobject<UBoxComponent>(TEXT("Tile!"));
-	// grid.Empty();
-	// tiles.Empty();
-	// weight.Empty();
-	// // Box->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
-	// int reserveSize = Size.X * Size.Y;
-	// grid.Reserve(reserveSize);
-	// tiles.Reserve(reserveSize);
-	// weight.Reserve(reserveSize);
-	// for(int x = 0; x < Size.X; x++){
-	// 	for(int y = 0; y < Size.Y; y++){
-	// 		FVector2D cord = FVector2D(x * offset, y * offset);
-	// 		grid.Add(cord);
-	// 		weight.Add(0);
-	// 		if(y == 0 || x == 0){
-	// 			tiles.Add(TileEnums::Occupied);
-	// 		}else{
-	// 			tiles.Add(TileEnums::Empty);				
-	// 		}
-	// 	}
-	// }
-	// if(GEngine){
-	// 	GEngine->AddOnScreenDebugMessage(-1 , 15.f, FColor::Emerald ,TEXT("Grid Created"));		
-	// }
-	// CreateGrid(size.X, size.Y);
+ 	
 }
 void AGridSystem::OnConstruction(const FTransform& Transform){
 	grid.Empty();
@@ -59,23 +32,48 @@ void AGridSystem::OnConstruction(const FTransform& Transform){
 		actor->Destroy();
 	}
 	spawnedActors.Empty();
-	CreateGrid(size.X, size.Y);
+	// CreateGrid(size.X, size.Y);
+	// mapFiles.Empty();
+	// const FString filepath = FPaths::ProjectDir() + TEXT("Levels/*.txt");
+	// IFileManager::Get().FindFiles(mapFiles, *filepath, true, true);
+	// LoadGridFromTxtFile(0);
 	//SpawnApple();
 }
 // Called when the game starts or when spawned
 void AGridSystem::BeginPlay()
 {
-	Super::BeginPlay();
-	
+	mapFiles.Empty();
+	const FString filepath = FPaths::ProjectDir() + TEXT("Levels/*.txt");
+	IFileManager::Get().FindFiles(mapFiles, *filepath, true, false);
+	// LoadGridFromTxtFile(0);
 	if(GEngine){
 		GEngine->AddOnScreenDebugMessage(-1 , 15.f, FColor::Emerald ,TEXT("Grid Created"));
 		GEngine->AddOnScreenDebugMessage(-1 , 15.f, FColor::Emerald ,FString::Printf(TEXT("Tile amount %d"), grid.Num()));
 	}
+	Super::BeginPlay();
 }
 
-void AGridSystem::CreateGrid(int width, int height){
- 	// UE_LOG(LogTemp, Warning, TEXT("Created Grid"))
-	
+void AGridSystem::BuildGrid(){
+	for (AActor*& actor : spawnedActors) {
+		actor->Destroy();
+	}
+	spawnedActors.Empty();
+	for (int i = 0; i < tiles.Num(); i++) {
+		if(!wallModel || tiles[i] == TileEnums::Empty) continue;
+		FVector spawnLocation = FVector(grid[i], GetActorLocation().Z);
+		AActor* wall = GetWorld()->SpawnActor<AActor>(wallModel, spawnLocation, GetActorRotation());
+		spawnedActors.Add(wall);
+		wall->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
+	}
+}
+
+void AGridSystem::DefaultGrid(){
+	const int width = 50;
+	const int height = 50;
+	grid.Empty();
+	tiles.Empty();
+	weightFromStart.Empty();
+	weightFromEnd.Empty();
 	h = height;
 	// Size.Y = height;
 	// Size.X = height;
@@ -83,12 +81,78 @@ void AGridSystem::CreateGrid(int width, int height){
 	grid.Reserve(reserveSize);
 	tiles.Reserve(reserveSize);
 	weightFromStart.Reserve(reserveSize);
+	weightFromEnd.Reserve(reserveSize);
+
+	for(int x = 0; x < width; x++){
+		for(int y = 0; y < height; y++){
+			FVector2D cord = FVector2D(x * offset, y * offset);
+			cord += FVector2D(GetActorLocation());
+			grid.Add(cord);
+			weightFromStart.Add(reserveSize);
+			weightFromEnd.Add(reserveSize);
+			TileEnums tileStatus = TileEnums::Empty;
+			if(y == 0 || x == 0 || x == width-1 || y == height-1){
+				//tiles.Add(TileEnums::Occupied);
+				tileStatus = TileEnums::Occupied;
+			}
+			tiles.Add(tileStatus);
+		}
+	}
+	BuildGrid();
+}
+void AGridSystem::CreateGrid(int width, int height){
+	h = height;
+	//Empty in case already set
+	grid.Empty();
+	tiles.Empty();
+	weightFromStart.Empty();
+	weightFromEnd.Empty();
+
+	//Reserve for less resize
+	uint32 reserveSize = width * height;
+	grid.Reserve(reserveSize);
+	tiles.Reserve(reserveSize);
+	weightFromStart.Reserve(reserveSize);
+	weightFromEnd.Reserve(reserveSize);
+
+	for(int x = 0; x < width; x++){
+		for(int y = 0; y < height; y++){
+			FVector2D cord = FVector2D(x * offset, y * offset);
+			cord += FVector2D(GetActorLocation());
+			grid.Add(cord);
+			weightFromStart.Add(reserveSize);
+			weightFromEnd.Add(reserveSize);
+			TileEnums tileStatus = TileEnums::Empty;
+			if(y == 0 || x == 0 || x == width-1 || y == height-1){
+				//tiles.Add(TileEnums::Occupied);
+				tileStatus = TileEnums::Occupied;
+			}
+			tiles.Add(tileStatus);
+		}
+	}
+	BuildGrid();	
+}
+
+void AGridSystem::LoadGridFromTxtFile(int level){
+	if(level > mapFiles.Num()-1) level = 0;
 
 	TArray<FString> lines;
-	FString filepath = FPaths::ProjectDir() + TEXT("Levels/Map1.txt");
+	FString filepath = FPaths::ProjectDir() + TEXT("Levels/") + mapFiles[level];
+
+	//Empty in case already set
+	grid.Empty();
+	tiles.Empty();
+	weightFromStart.Empty();
+	weightFromEnd.Empty();
 
 	if(FFileHelper::LoadFileToStringArray(lines, *filepath)){
 		h = lines[0].Len();
+		uint32 reserveSize = lines[0].Len() * lines.Num();
+		grid.Reserve(reserveSize);
+		tiles.Reserve(reserveSize);
+		weightFromStart.Reserve(reserveSize);
+		weightFromEnd.Reserve(reserveSize);
+
 		for(int x = 0; x < lines.Num(); x++){
 			for(int y = 0; y < lines[0].Len(); y++){
 				FVector2D cord = FVector2D(x * offset, y * offset);
@@ -108,35 +172,10 @@ void AGridSystem::CreateGrid(int width, int height){
 			}
 		}
 	}else{
-		for(int x = 0; x < width; x++){
-			for(int y = 0; y < height; y++){
-				FVector2D cord = FVector2D(x * offset, y * offset);
-				cord += FVector2D(GetActorLocation());
-				grid.Add(cord);
-				weightFromStart.Add(reserveSize);
-				weightFromEnd.Add(reserveSize);
-				TileEnums tileStatus = TileEnums::Empty;
-				if(y == 0 || x == 0 || x == width-1 || y == height-1){
-					//tiles.Add(TileEnums::Occupied);
-					tileStatus = TileEnums::Occupied;
-				}
-				tiles.Add(tileStatus);
-			}
-		}		
+		DefaultGrid();
+		return;
 	}
-
-	for (int i = 0; i < tiles.Num(); i++) {
-		if(!wallModel || tiles[i] == TileEnums::Empty) continue;
-		FVector spawnLocation = FVector(grid[i], GetActorLocation().Z);
-		AActor* wall = GetWorld()->SpawnActor<AActor>(wallModel, spawnLocation, GetActorRotation());
-		spawnedActors.Add(wall);
-		wall->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
-	}
-	//SpawnApple();
-	if(GEngine){
-		GEngine->AddOnScreenDebugMessage(-1 , 15.f, FColor::Emerald ,TEXT("Grid Created"));
-		GEngine->AddOnScreenDebugMessage(-1 , 15.f, FColor::Emerald ,FString::Printf(TEXT("Tile amount %d"), grid.Num()));
-	}
+	BuildGrid();
 }
 
 FVector2D AGridSystem::GetTile(int x, int y){

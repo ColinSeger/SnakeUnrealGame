@@ -25,11 +25,11 @@ class SNAKEUNREAL_API AGridSystem : public AActor
 	UPROPERTY(Export)
 	TArray<FVector2D> grid;
 	UPROPERTY(Export)
+	TArray<TileEnums> tiles;
+	UPROPERTY(Export)
 	TArray<float> weightFromStart;
 	UPROPERTY(Export)
 	TArray<float> weightFromEnd;
-	UPROPERTY(Export)
-	TArray<TileEnums> tiles;
 	UPROPERTY(Export)
 	int h = 0;
 public:	
@@ -56,9 +56,13 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Grid")
 	TSubclassOf<AActor> Apple;
 
+	TArray<FString> mapFiles;
+
 	TArray<AActor*> spawnedActors;
 
 	TArray<int> GetNeighbors(int index);
+
+	FORCEINLINE void BuildGrid();
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Grid")
@@ -68,6 +72,12 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="Grid")
 	void CreateGrid(int width, int height);
+
+	UFUNCTION(BlueprintCallable, Category="Grid")
+	void DefaultGrid();
+
+	UFUNCTION(BlueprintCallable, Category="Grid")
+	void LoadGridFromTxtFile(int level);
 
 	UFUNCTION(BlueprintCallable, Category="Grid")
 	FVector2D GetTile(int x, int y);

@@ -96,4 +96,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="Snake")
 	float GetLerpValue()const {return currentLerp;};
+
+	UFUNCTION(BlueprintCallable, Category="Snake")
+	float GetSnakeLength()const {return size;};
 };

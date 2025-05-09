@@ -9,9 +9,6 @@
 UENUM(BlueprintType)
 enum class EGameMode : uint8{
 	NoState,
-	MenuState,
-	PlayState,
-	PauseState,
 	OnePlayer,
 	TwoPlayer,
 	VsAI
@@ -27,7 +24,8 @@ class SNAKEUNREAL_API USnakeInstanceSubsystem : public UGameInstanceSubsystem
 	GENERATED_BODY()
 	private:
 	EGameMode gameMode = EGameMode::NoState;
-
+	TArray<int> scores;
+	int mapID = 0;
 	public:
 
 	UPROPERTY(BlueprintAssignable, Category= "GameMode")
@@ -37,5 +35,20 @@ class SNAKEUNREAL_API USnakeInstanceSubsystem : public UGameInstanceSubsystem
 	FORCEINLINE EGameMode GetGameMode() const {return gameMode;}
 
 	UFUNCTION(BlueprintCallable)
+	void SetScores(TArray<int> scores);
+
+	UFUNCTION(BlueprintCallable)
+	TArray<int> GetScores() const {return scores;};
+
+	UFUNCTION(BlueprintCallable)
 	void ChangeMode(EGameMode NewGameMode);
+
+	UFUNCTION(BlueprintCallable)
+	int GetMapID() const {return mapID;};
+
+	UFUNCTION(BlueprintCallable)
+	void NextMapID();
+
+	UFUNCTION(BlueprintCallable)
+	void SetMapID(int id);
 };

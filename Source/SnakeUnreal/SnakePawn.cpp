@@ -27,7 +27,8 @@ void ASnakePawn::BeginPlay()
 		return;
 	}
 
-	// FVector2D spawn = gridSystem->GetRandomEmptyTile();
+	SetActorLocation(FVector(gridSystem->GetRandomEmptyTile(), 90));
+
 	FVector2D spawn = FVector2D(GetActorLocation() - gridSystem->GetActorLocation());
 	//spawn = spawn.RoundToVector();
 	
@@ -41,9 +42,9 @@ void ASnakePawn::BeginPlay()
 	currentTile.Y = (int)currentTile.Y;
 	// FVector newLocation = FVector(local.X, local.Y, 90);
 	// SetActorLocation(newLocation);
-	if(GEngine){
-		GEngine->AddOnScreenDebugMessage(-1 , 15.f, FColor::Emerald ,FString::Printf(TEXT("Starting at %d , %d"), (int)currentTile.X, (int)currentTile.Y));
-	}
+	// if(GEngine){
+	// 	GEngine->AddOnScreenDebugMessage(-1 , 15.f, FColor::Emerald ,FString::Printf(TEXT("Starting at %d , %d"), (int)currentTile.X, (int)currentTile.Y));
+	// }
 }
 // Called every frame
 void ASnakePawn::Tick(float DeltaTime){
