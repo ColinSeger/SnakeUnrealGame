@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "Camera/CameraComponent.h"
 #include "CameraMovement.generated.h"
 
 UCLASS()
@@ -22,12 +23,21 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 protected:
-	// Called when the game starts or when spawned
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	TObjectPtr<UCameraComponent> movementCamera;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	TArray<AActor*> trackingTargets;
+
 	virtual void BeginPlay() override;
 	
 	UFUNCTION(BlueprintCallable, Category="Control")
-	void RotateCamera();
+	void RotateCamera(float Direction);
 
 	UFUNCTION(BlueprintCallable, Category="Control")
-	void EditCameraDistance();
+	void EditCameraDistance(float Speed);
+
+	UFUNCTION(BlueprintCallable, Category="Control")
+	void CameraTracking();
 };

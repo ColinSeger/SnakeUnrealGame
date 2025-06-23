@@ -147,6 +147,8 @@ void AGridSystem::LoadGridFromTxtFile(int level){
 
 	if(FFileHelper::LoadFileToStringArray(lines, *filepath)){
 		h = lines[0].Len();
+
+		//Reserves grid arrays size
 		uint32 reserveSize = lines[0].Len() * lines.Num();
 		grid.Reserve(reserveSize);
 		tiles.Reserve(reserveSize);
@@ -160,14 +162,15 @@ void AGridSystem::LoadGridFromTxtFile(int level){
 				grid.Add(cord);
 				weightFromStart.Add(reserveSize);
 				weightFromEnd.Add(reserveSize);
+
+				//Creates empty tile
 				TileEnums tileStatus = TileEnums::Empty;
 				if(lines.Num() > x && lines[x].Len() > y){
 					if(lines[x][y] == '1'){
-						//tiles.Add(TileEnums::Occupied);
+						//Is occupied due to wall
 						tileStatus = TileEnums::Occupied;
 					}
 				}
-				
 				tiles.Add(tileStatus);
 			}
 		}
@@ -254,6 +257,7 @@ FVector2D AGridSystem::AStarBetweenTiles(FVector2D origin, FVector2D target){
 		for (int index = 0; index < toBeSearched.Num(); index++) {
 			float currentFCost = weightFromStart[currentTileIndex] + weightFromEnd[currentTileIndex];
 			float searchFCost = weightFromStart[toBeSearched[index]] + weightFromEnd[toBeSearched[index]];
+
 			//Makes sure no other tile has a lower value
 			if(currentFCost > searchFCost || (currentFCost == searchFCost && weightFromEnd[toBeSearched[index]] < weightFromEnd[currentTileIndex])){
 				for(int i = 0; i< indexPath.Num(); i++){
@@ -310,7 +314,7 @@ void AGridSystem::ChangeTileStatus(FVector2D location, TileEnums newType){
 	int tileIndex = location.Y + h * location.X;
 	if(tileIndex >= grid.Num() || tileIndex < 0) {
 		if(GEngine){
-			GEngine->AddOnScreenDebugMessage(-1 , 15.f, FColor::Emerald ,TEXT("What?"));
+			GEngine->AddOnScreenDebugMessage(-1 , 15.f, FColor::Emerald ,TEXT("Should never happen"));
 		}
 	}
 	tiles[tileIndex] = newType;

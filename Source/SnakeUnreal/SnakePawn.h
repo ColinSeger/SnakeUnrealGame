@@ -15,7 +15,7 @@
 #include "SnakePawn.generated.h"
 
 UENUM(BlueprintType)
- enum class Direction : uint8{
+enum class Direction : uint8{
 	Forward,
 	Back,
 	Left,
@@ -82,8 +82,6 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
-
 
 	UFUNCTION(BlueprintCallable, Category="Snake")
 	FVector MoveTile();

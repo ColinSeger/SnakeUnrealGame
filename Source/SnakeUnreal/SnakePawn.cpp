@@ -2,10 +2,6 @@
 
 
 #include "SnakePawn.h"
-#include "GameFramework/Actor.h"
-#include "Math/MathFwd.h"
-#include "Math/UnrealMathUtility.h"
-
 
 // Sets default values
 ASnakePawn::ASnakePawn()
@@ -53,9 +49,9 @@ void ASnakePawn::Tick(float DeltaTime){
 	
 	currentLerp += speed * DeltaTime;
 
-	if(currentLerp > 1){
-		// ResetLerpValue();
-	}
+	// if(currentLerp > 1){
+	//	 ResetLerpValue();
+	// }
 	// MovementLogic();
 	// VectorLerp(currentLocation, targetLocation, currentLerp);
 
@@ -126,6 +122,7 @@ void ASnakePawn::ResetLerpValue(){
 
 void ASnakePawn::AddToTail(int num){
 	size += num;
+	//Broadcasts event to whoever listens
 	scoreChanged.Broadcast(size);
 }
 
@@ -133,8 +130,6 @@ void ASnakePawn::TailSizeCheck(){
 	if (tailLocations.Num() >= size) {
 		return;
 	}
-	FActorSpawnParameters SpawnInfo;
-
 	FVector tailLocation = currentLocation;
 	FVector2D gridLocation;
 	if(tailLocations.Num()> 0){
@@ -146,7 +141,10 @@ void ASnakePawn::TailSizeCheck(){
 		tailLocation = tailLocations.Last().oldLocation;
 	}
 
+	//Spawns new tail at last valid point in tail
+	FActorSpawnParameters SpawnInfo;
 	AActor* spawnedTail = GetWorld()->SpawnActor<AActor>(tailActor, tailLocation, GetActorRotation(), SpawnInfo);
+
 	Tail tail{
 		tailLocation,
 		spawnedTail->GetActorLocation(),
@@ -159,6 +157,7 @@ void ASnakePawn::TailSizeCheck(){
 
 void ASnakePawn::BeginDestroy(){
 	Super::BeginDestroy();
+	//Destroys all tail actors
 	for(int i = 0; i < tailLocations.Num(); i++){
 		tailLocations[i].tail->Destroy();
 	}

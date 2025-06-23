@@ -15,7 +15,7 @@ ACameraMovement::ACameraMovement()
 void ACameraMovement::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 }
 
 // Called every frame
@@ -23,20 +23,50 @@ void ACameraMovement::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	CameraTracking();
 }
 
 // Called to bind functionality to input
 void ACameraMovement::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-	//PlayerInputComponent.
-}
-
-void ACameraMovement::RotateCamera(){
+	if(movementCamera) return;
+	auto owner = GetOwner();
 	
+	if(owner){
+		UActorComponent* component = owner->FindComponentByClass<UCameraComponent>();
+		
+		movementCamera = Cast<UCameraComponent>(component);
+	}
 }
 
-void ACameraMovement::EditCameraDistance(){
+void ACameraMovement::RotateCamera(float Direction){
+	FRotator rotation = GetActorRotation();
 
+	FRotator toAdd = FRotator(0, Direction, 0);
+
+	rotation += toAdd;
+
+	SetActorRotation(rotation);
+}
+
+void ACameraMovement::EditCameraDistance(float Speed){
+	if(!movementCamera) return;
+	UCameraComponent* localCamera = movementCamera.Get();
+
+	FVector location = localCamera->GetRelativeLocation();
+
+	location += FVector(Speed, 0, 0);
+
+	localCamera->SetRelativeLocation(location);
+}
+
+void ACameraMovement::CameraTracking(){
+	FVector preLocation = GetActorLocation();
+	FVector newLocation = preLocation;
+	for (int i = 0; i < trackingTargets.Num(); i++){
+		preLocation = newLocation;
+		newLocation = trackingTargets[i]->GetActorLocation();
+	}
+	SetActorLocation(FMath::Lerp(preLocation, newLocation, 0.5f));
 }
